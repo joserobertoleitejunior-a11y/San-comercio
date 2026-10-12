@@ -1,0 +1,12 @@
+# Pronto pra quando o projeto migrar do GitHub Pages pro Netlify.
+# Site estático puro (sem build) — publica a raiz do repositório.
+[build]
+  publish = "."
+  command = "echo 'Site estático — nenhum build necessário'"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
