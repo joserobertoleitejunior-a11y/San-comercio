@@ -69,11 +69,13 @@
 
     // Clientes fictícios
     var clientes = [];
-    for (var c = 0; c < 46; c++) {
+    for (var c = 0; c < 160; c++) {
       clientes.push({
         nome: NOMES[c % NOMES.length] + " " + SOBRENOMES[Math.floor(r() * SOBRENOMES.length)],
         whatsapp: "1590000" + String(1000 + c * 37).slice(-4),
         cidade: CIDADES[Math.floor(r() * CIDADES.length)],
+        // dia (contando de hoje pra trás) em que o cliente aparece pela 1ª vez
+        entrada: Math.floor(Math.pow(r(), 1.4) * 175),
       });
     }
 
@@ -88,6 +90,10 @@
       var crescimento = 1 + (dias - d) / dias * 0.35; // site "pegando tração"
       var nVisitas = Math.round((base + r() * 18) * crescimento);
 
+      var elegiveis = clientes.filter(function (c) { return c.entrada >= d; });
+      if (!elegiveis.length) elegiveis = clientes.slice(0, 5);
+      function escolher(expoente) { return elegiveis[Math.floor(Math.pow(r(), expoente) * elegiveis.length)]; }
+
       function quando() {
         var hm = horaDoDia(r);
         var t = new Date(dia);
@@ -97,7 +103,7 @@
 
       for (var v = 0; v < nVisitas; v++) {
         var visitante = "v-demo-" + Math.floor(r() * nVisitas * 0.8 + d * 50);
-        var cli = r() < 0.18 ? clientes[Math.floor(r() * clientes.length)] : null;
+        var cli = r() < 0.035 ? escolher(1) : null;
         visitas.push({
           pagina: sortearPeso(r, PAGINAS, 1)[0],
           referencia: sortearPeso(r, ORIGENS, 1)[0],
@@ -118,7 +124,7 @@
       }
       var nOrc = Math.round((semana === 0 ? 1 : 3) + r() * 4 * crescimento);
       for (var o = 0; o < nOrc; o++) {
-        var cliente = clientes[Math.floor(Math.pow(r(), 1.3) * clientes.length)];
+        var cliente = escolher(1.8);
         var itens = [];
         var nItens = 1 + Math.floor(r() * 4);
         for (var i = 0; i < nItens; i++) {
@@ -128,7 +134,7 @@
           } else if (x < 0.4) {
             var livre = LIVRES[Math.floor(r() * LIVRES.length)];
             itens.push({ nome: livre, detalhe: "", qtd: 1 + Math.floor(r() * 10) });
-            pesquisas.push({ termo: livre, resultados: 0, origem: "item-livre", pagina: "/index.html", criado_em: quando() });
+            pesquisas.push({ termo: livre, resultados: 0, origem: "item-livre", pagina: "/index.html", cliente_whatsapp: cliente.whatsapp, criado_em: quando() });
           } else {
             itens.push({ nome: sortearPeso(r, PRODUTOS.map(function (p, j) { return [p, PESO_PRODUTOS[j]]; }), 1)[0], detalhe: "", qtd: 1 + Math.floor(r() * 4) });
           }
@@ -140,7 +146,7 @@
         identificacoes.push({ nome: cliente.nome, whatsapp: cliente.whatsapp, cidade: cliente.cidade, origem: "lista", criado_em: criado });
       }
       if (r() < 0.7) {
-        var c2 = clientes[Math.floor(r() * clientes.length)];
+        var c2 = escolher(1);
         identificacoes.push({ nome: c2.nome, whatsapp: c2.whatsapp, cidade: c2.cidade, origem: "entrar", criado_em: quando() });
       }
     }

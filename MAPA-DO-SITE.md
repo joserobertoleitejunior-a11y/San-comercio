@@ -35,6 +35,8 @@
 | Link "Área administrativa" | as 3 páginas | último `<a class="nav-principal__admin">` do `<nav>` do header. Só aparece ao abrir o hambúrguer (que existe no celular e no desktop); no desktop vira um painel sob o botão. CSS: `.nav-principal__admin` |
 | Botão "Entrar com WhatsApp" / modal | as 3 páginas | `.cabecalho__entrar` no header + `===== MODAL: ENTRAR COM WHATSAPP`; lógica em `identificacao.js` |
 | Busca do catálogo | `index.html` | `.busca-produtos` + `.busca-vazia` dentro de `===== PRODUTOS`; lógica em `main.js → iniciarFiltroProdutos()` |
+| Painel admin: cores dos gráficos, tipos de gráfico | `assets/js/admin.js` | objeto `COR` e `STATUS_COR` no topo; cada gráfico em `renderGraficosVisao()`, `renderClientes()`, `renderTrafego()` |
+| Painel admin: tags dos clientes (Quente/Novo/Recorrente) | `assets/js/admin.js` | `montarClientes()` |
 | Painel admin (abas, textos) | `admin.html` | seções `data-secao="visao/clientes/orcamentos/pesquisas/trafego"` |
 | PIN do painel / e-mail interno | `assets/js/admin.js` | `PAINEL_EMAIL_FIXO` e `SUFIXO_SENHA_PIN` no topo + usuário no Supabase |
 | Dados de demonstração do painel | `assets/js/admin-demo.js` | listas de nomes/cidades/termos fictícios |
@@ -67,7 +69,10 @@ assets/js/lista-orcamento.js  Lista de orçamento (carrinho sem preço) → What
 assets/js/identificacao.js Cliente se identifica com nome + WhatsApp (salva no navegador + tabela identificacoes)
 admin.html                 Painel: Visão geral, Clientes, Orçamentos, Pesquisas, Tráfego (login por PIN)
 assets/css/admin.css       Visual do painel
-assets/js/admin.js         Lógica do painel (Supabase real ou modo demonstração), gráficos Chart.js, CSV
+assets/js/admin.js         Lógica do painel (Supabase real ou modo demonstração), gráficos Chart.js, CSV.
+                           Seções: Visão geral (KPIs com mini-gráfico, visitas com comparação, funil, orçamentos por situação,
+                           horário de pico, rankings), Clientes (cartões + filtros + detalhe), Orçamentos, Pesquisas, Tráfego (mapa de calor)
+assets/js/sem-zoom.js      Trava zoom por pinça, toque duplo, Ctrl+roda e Ctrl+/−/0 (junto com o <meta viewport> user-scalable=no)
 assets/js/admin-demo.js    Gerador de dados fictícios pra apresentar o painel antes de ligar o banco
 supabase/schema.sql        Tabelas + RLS (site só insere; painel logado lê)
 assets/js/animacoes.js     GSAP + ScrollTrigger: preloader, hero, barra-mangueira, títulos, contadores, tilt, etc.
@@ -125,3 +130,9 @@ A loja amarela antiga **não** é usada.
 ## 6. Logotipo
 
 O logo é um SVG inline (texto + X de mangueiras com terminais de latão), redesenhado a partir da marca. As cores mudam por CSS (`.logo-san__texto`, `.logo-san__mangueira`). Se o cliente enviar o logo vetorial oficial, substituir o `<svg class="logo-san">` nas 3 páginas (header, footer e preloader).
+
+## 7. Regras de layout (valem pro site e pro painel)
+
+- **Sem zoom:** `<meta viewport ... user-scalable=no>` + `sem-zoom.js`. Trade-off de acessibilidade aceito a pedido do cliente.
+- **Sem rolagem lateral em nenhuma largura** (testado de 280px a 1920px nas 4 páginas). Listas do painel são cartões em grade `auto-fill` (nada de tabela larga); filhos de grid têm `min-width: 0`; `html { overflow-x: clip }`.
+- Telas < 360px: cabeçalho e margens encolhem (bloco `max-width: 359px` no fim do `style.css`).
