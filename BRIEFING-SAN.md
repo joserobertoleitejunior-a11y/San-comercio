@@ -30,7 +30,8 @@ Frases oficiais usadas (das artes do cliente): "Tudo o que você precisa, em um 
 
 ## 3. Identidade visual
 
-- Azul-marinho do logo + azul royal da pintura da loja nova + dourado/latão dos terminais do logotipo.
+- **Azul cobalto elétrico** (a pintura da loja) + **tinta escura** (`#061443`) + **laranja de segurança** (`#FF7A1A`, os quadradinhos laranja do X no letreiro). Propositalmente diferente da Remop (azul-marinho + amarelo). O dourado/latão ficou só no metal do logo e das ilustrações.
+- Fundo do topo sem foto: a parede ondulada da fachada ficava feia e a foto era de baixa resolução. É um fundo desenhado (gradiente cobalto, X gigante e anéis técnicos).
 - Logo: "SAN COMÉRCIO" com X formado por duas mangueiras com terminais de latão entre "MANGUEIRAS" e "CONEXÕES".
 - Loja amarela = antiga (não usar). Loja azul = atual.
 

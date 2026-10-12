@@ -19,7 +19,7 @@
   var PAINEL_EMAIL_FIXO = "painel@san-comercio.internal";
   var SUFIXO_SENHA_PIN = "-SanPainel2026!";
 
-  var COR = { azul: "#1E44B5", latao: "#C08417", verde: "#14866D", cinza: "#9AA1B5", anterior: "#B4BCD2", grade: "#E6EAF3", texto: "#586282" };
+  var COR = { azul: "#1F5BFF", latao: "#D96A00", verde: "#14866D", cinza: "#9AA1B5", anterior: "#B4BCD2", grade: "#E6EAF3", texto: "#586282" };
   var STATUS_COR = { novo: COR.azul, atendendo: COR.latao, fechado: COR.verde, perdido: COR.cinza };
   var STATUS = { novo: "Novo", atendendo: "Atendendo", fechado: "Fechado", perdido: "Perdido" };
   var TITULOS = { visao: "Visão geral", clientes: "Clientes", orcamentos: "Orçamentos", pesquisas: "Pesquisas", trafego: "Tráfego" };
@@ -247,7 +247,7 @@
       interaction: { mode: "index", intersect: false },
       plugins: {
         legend: { display: false },
-        tooltip: { backgroundColor: "#0E1A4A", padding: 10, cornerRadius: 8, boxPadding: 4, titleFont: { family: "Hanken Grotesk", weight: "700" }, bodyFont: { family: "Hanken Grotesk" } },
+        tooltip: { backgroundColor: "#061443", padding: 10, cornerRadius: 8, boxPadding: 4, titleFont: { family: "Hanken Grotesk", weight: "700" }, bodyFont: { family: "Hanken Grotesk" } },
       },
       scales: {
         x: { grid: { display: false }, border: { color: COR.grade }, ticks: { color: COR.texto, maxRotation: 0, autoSkipPadding: 14, font: { family: "JetBrains Mono", size: 11 } } },
@@ -344,8 +344,8 @@
     var gradiente = null;
     if (ctx) {
       gradiente = ctx.getContext("2d").createLinearGradient(0, 0, 0, 260);
-      gradiente.addColorStop(0, "rgba(30,68,181,0.22)");
-      gradiente.addColorStop(1, "rgba(30,68,181,0)");
+      gradiente.addColorStop(0, "rgba(31,91,255,0.22)");
+      gradiente.addColorStop(1, "rgba(31,91,255,0)");
     }
     var conjuntos = [{ label: "Visitas", data: atual, borderColor: COR.azul, backgroundColor: gradiente, fill: true, borderWidth: 2.5, tension: 0.35, pointRadius: 0, pointHoverRadius: 5, pointHoverBackgroundColor: COR.azul, pointHoverBorderColor: "#fff", pointHoverBorderWidth: 2 }];
     if (el.comparar.checked) {
@@ -358,7 +358,7 @@
         plugins: {
           legend: { display: el.comparar.checked, align: "end", labels: { usePointStyle: true, boxWidth: 8, color: COR.texto, font: { family: "Hanken Grotesk", size: 12 } } },
           tooltip: {
-            backgroundColor: "#0E1A4A", padding: 10, cornerRadius: 8,
+            backgroundColor: "#061443", padding: 10, cornerRadius: 8,
             callbacks: {
               title: function (items) { return items.length ? rotulos[items[0].dataIndex] : ""; },
               label: function (c) {
@@ -380,7 +380,7 @@
         }),
       },
       options: opcoesBase({
-        plugins: { legend: { display: true, position: "bottom", labels: { usePointStyle: true, boxWidth: 8, color: COR.texto, font: { family: "Hanken Grotesk", size: 12 } } }, tooltip: { backgroundColor: "#0E1A4A", padding: 10, cornerRadius: 8 } },
+        plugins: { legend: { display: true, position: "bottom", labels: { usePointStyle: true, boxWidth: 8, color: COR.texto, font: { family: "Hanken Grotesk", size: 12 } } }, tooltip: { backgroundColor: "#061443", padding: 10, cornerRadius: 8 } },
         scales: {
           x: { stacked: true, grid: { display: false }, border: { color: COR.grade }, ticks: { color: COR.texto, maxRotation: 0, autoSkipPadding: 14, font: { family: "JetBrains Mono", size: 11 } } },
           y: { stacked: true, beginAtZero: true, grid: { color: COR.grade }, border: { display: false }, ticks: { color: COR.texto, precision: 0, font: { family: "JetBrains Mono", size: 11 } } },
@@ -392,7 +392,7 @@
     var maxHora = Math.max.apply(null, porHora);
     grafico("horas", {
       type: "bar",
-      data: { labels: HORAS.map(function (hh) { return hh + "h"; }), datasets: [{ label: "Visitas", data: porHora, backgroundColor: porHora.map(function (v) { return v === maxHora ? COR.azul : "#8FA5E0"; }), borderRadius: 4, borderSkipped: "start", maxBarThickness: 22 }] },
+      data: { labels: HORAS.map(function (hh) { return hh + "h"; }), datasets: [{ label: "Visitas", data: porHora, backgroundColor: porHora.map(function (v) { return v === maxHora ? COR.azul : "#8FB0FF"; }), borderRadius: 4, borderSkipped: "start", maxBarThickness: 22 }] },
       options: opcoesBase({ interaction: { mode: "nearest", intersect: true } }),
     });
   }
@@ -773,8 +773,8 @@
         var v = matriz[d][i];
         var c = criar("span", "calor__cel", v ? String(v) : "");
         var a = v ? 0.1 + 0.9 * v / max : 0;
-        c.style.background = v ? "rgba(30,68,181," + a.toFixed(2) + ")" : "var(--cor-fundo-alt)";
-        c.style.color = a > 0.5 ? "#fff" : "#0E1A4A";
+        c.style.background = v ? "rgba(31,91,255," + a.toFixed(2) + ")" : "var(--cor-fundo-alt)";
+        c.style.color = a > 0.5 ? "#fff" : "#061443";
         c.title = DIAS_SEMANA[d] + ", " + h + "h: " + v + (v === 1 ? " visita" : " visitas");
         el.calor.appendChild(c);
       });
@@ -790,7 +790,7 @@
     var maxS = Math.max.apply(null, porSemana);
     grafico("semana", {
       type: "bar",
-      data: { labels: [1, 2, 3, 4, 5, 6, 0].map(function (d) { return DIAS_SEMANA[d]; }), datasets: [{ label: "Visitas", data: porSemana, backgroundColor: porSemana.map(function (v) { return v === maxS ? COR.azul : "#8FA5E0"; }), borderRadius: 4, borderSkipped: "start", maxBarThickness: 34 }] },
+      data: { labels: [1, 2, 3, 4, 5, 6, 0].map(function (d) { return DIAS_SEMANA[d]; }), datasets: [{ label: "Visitas", data: porSemana, backgroundColor: porSemana.map(function (v) { return v === maxS ? COR.azul : "#8FB0FF"; }), borderRadius: 4, borderSkipped: "start", maxBarThickness: 34 }] },
       options: opcoesBase({ interaction: { mode: "nearest", intersect: true } }),
     });
   }

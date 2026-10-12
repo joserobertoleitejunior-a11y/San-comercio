@@ -198,9 +198,9 @@
       }
     }
 
-    // Parallax ao rolar: foto afunda e desfoca, conteúdo sobe
-    gsap.fromTo(hero.querySelector(".hero__foto"), { yPercent: 0, filter: "blur(0px)" }, {
-      yPercent: 14, filter: "blur(6px)", ease: "none", immediateRender: false,
+    // Parallax ao rolar: fundo afunda, conteúdo sobe
+    gsap.fromTo(hero.querySelector(".hero__foto"), { yPercent: 0 }, {
+      yPercent: 10, ease: "none", immediateRender: false,
       scrollTrigger: { trigger: hero, start: "top top", end: "bottom top", scrub: 0.5 },
     });
     gsap.to(hero.querySelector(".hero__grid, .hero__conteudo"), {
@@ -271,8 +271,8 @@
         opacity: 0.25, x: -16, duration: 0.6, ease: "power2.out",
         scrollTrigger: { trigger: passo, start: "top 78%", toggleActions: "play none none none" },
       });
-      gsap.fromTo(num, { backgroundColor: "#0E1A4A", color: "#F6D27A" }, {
-        backgroundColor: "#E2AA33", color: "#0E1A4A", duration: 0.4,
+      gsap.fromTo(num, { backgroundColor: "#061443", color: "#FFB36B" }, {
+        backgroundColor: "#FF7A1A", color: "#061443", duration: 0.4,
         scrollTrigger: { trigger: passo, start: "top 70%", toggleActions: "play none none none" },
       });
     });

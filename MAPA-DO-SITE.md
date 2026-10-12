@@ -28,7 +28,8 @@
 | Galeria de fotos | `institucional.html` | bloco `===== GALERIA` (~linha 142) |
 | Perguntas frequentes | `institucional.html` | bloco `===== FAQ` (~linha 160) |
 | Endereço/contatos/mapa | `localizacao.html` | `.localizacao__grid` (~linha 107); textos vêm do `config.js` |
-| Cores, fontes, raios, sombras | `assets/css/style.css` | `:root` no topo (linhas 1–45) |
+| Cores, fontes, raios, sombras | `assets/css/style.css` | `:root` no topo. `--cor-marinho/primaria/loja` = azuis; `--cor-latao*` = ACENTO LARANJA (nome antigo, ver comentário). Cores dos gráficos do painel: `COR` em `admin.js` (validadas) |
+| Fundo do topo (hero) | `assets/css/style.css` | `.hero__foto` (gradientes) e `.hero__foto::after` (X gigante em SVG embutido). Sem foto de propósito |
 | Velocidade/efeitos das animações | `assets/js/animacoes.js` | ver seção 4 abaixo |
 | SEO (título, descrição, OG) | cada `.html` | `<head>` — `title`, `meta description`, `og:*`, JSON-LD (só na home+internas) |
 | Ícones flutuantes abaixo do header (igual Remop) | as 3 páginas | `.hero__faixa-contatos` logo no início de cada hero; links vêm do `config.js`  |
@@ -136,3 +137,5 @@ O logo é um SVG inline (texto + X de mangueiras com terminais de latão), redes
 - **Sem zoom:** `<meta viewport ... user-scalable=no>` + `sem-zoom.js`. Trade-off de acessibilidade aceito a pedido do cliente.
 - **Sem rolagem lateral em nenhuma largura** (testado de 280px a 1920px nas 4 páginas). Listas do painel são cartões em grade `auto-fill` (nada de tabela larga); filhos de grid têm `min-width: 0`; `html { overflow-x: clip }`.
 - Telas < 360px: cabeçalho e margens encolhem (bloco `max-width: 359px` no fim do `style.css`).
+
+- **`[hidden]` sempre esconde** (regra global no topo do `style.css`). Sem ela, o modal invisível "Entrar com WhatsApp" cobria a página e bloqueava toques.
