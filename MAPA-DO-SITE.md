@@ -31,7 +31,7 @@
 | Cores, fontes, raios, sombras | `assets/css/style.css` | `:root` no topo (linhas 1–45) |
 | Velocidade/efeitos das animações | `assets/js/animacoes.js` | ver seção 4 abaixo |
 | SEO (título, descrição, OG) | cada `.html` | `<head>` — `title`, `meta description`, `og:*`, JSON-LD (só na home+internas) |
-| Ícones flutuantes abaixo do header (igual Remop) | as 3 páginas | `.hero__faixa-contatos` logo no início de cada hero; links vêm do `config.js` (`facebookUrl` ainda provisório) |
+| Ícones flutuantes abaixo do header (igual Remop) | as 3 páginas | `.hero__faixa-contatos` logo no início de cada hero; links vêm do `config.js`  |
 | Botão "Entrar com WhatsApp" / modal | as 3 páginas | `.cabecalho__entrar` no header + `===== MODAL: ENTRAR COM WHATSAPP`; lógica em `identificacao.js` |
 | Busca do catálogo | `index.html` | `.busca-produtos` + `.busca-vazia` dentro de `===== PRODUTOS`; lógica em `main.js → iniciarFiltroProdutos()` |
 | Painel admin (abas, textos) | `admin.html` | seções `data-secao="visao/clientes/orcamentos/pesquisas/trafego"` |

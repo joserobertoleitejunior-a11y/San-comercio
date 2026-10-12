@@ -14,7 +14,7 @@
 | Fixo | (15) 3272-8295 | WhatsApp + artes |
 | E-mail | sancomercio@hotmail.com | WhatsApp Business |
 | Instagram | @san_comercio_de_mangueiras | enviado pelo José |
-| Facebook | página "San Comércio" (categoria: Loja de produtos automotivos) | print |
+| Facebook | https://www.facebook.com/profile.php?id=100075493675699 (categoria: Loja de produtos automotivos) | enviado pelo José |
 | Horário | Segunda 07:15–18:00 (confirmado). Demais dias: **a confirmar** | WhatsApp Business |
 | Categoria WhatsApp | Loja de ferragens | WhatsApp Business |
 
@@ -44,7 +44,7 @@ Frases oficiais usadas (das artes do cliente): "Tudo o que você precisa, em um 
 ## 5. Pendências com o cliente
 
 - [ ] Confirmar horário de terça a sexta e **sábado** (hoje o site mostra seg–sex 07h15–18h e sábado "consulte").
-- [ ] Link exato da página do Facebook (o print não mostra o endereço completo).
+- [x] Link da página do Facebook (recebido e aplicado).
 - [ ] Fotos reais dos produtos/balcão/prensa em boa resolução (as de categoria vêm de prints).
 - [ ] Logo vetorial oficial (o do site é redesenho em SVG).
 - [ ] Formas de pagamento e se faz entrega/venda para empresas (com nota) — não publicado por falta de confirmação.
