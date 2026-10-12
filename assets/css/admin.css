@@ -1,0 +1,174 @@
+/* ==========================================================================
+   Painel administrativo — San Comércio
+   Usa os tokens de style.css (:root). Layout: barra lateral azul-marinho
+   no desktop, abas no topo no celular.
+   ========================================================================== */
+
+.admin-body { background: var(--cor-fundo-alt); margin: 0; min-height: 100vh; }
+html:has(.admin-body), .admin-body { overflow-x: clip; }
+
+/* ---------- Login ---------- */
+.admin-login {
+  min-height: 100vh; display: grid; place-items: center; padding: 20px;
+  background: var(--listras), radial-gradient(circle at 70% 20%, #1A2D7A, var(--cor-marinho) 60%);
+}
+.admin-login[hidden] { display: none; }
+.admin-login__caixa {
+  width: min(380px, 100%); background: #fff; border-radius: var(--raio-grande);
+  padding: 32px 26px; box-shadow: var(--sombra-elevada); display: grid; gap: 14px; text-align: center;
+}
+.admin-login__logo { width: 200px; margin: 0 auto 4px; }
+.admin-login__caixa h1 { font-size: 1.6rem; margin: 0; }
+.admin-login__caixa > p { margin: 0 auto; font-size: 0.92rem; }
+.admin-login__caixa .campo { text-align: left; }
+.admin-login__pin { text-align: center; font: 700 1.6rem/1 var(--fonte-tecnica) !important; letter-spacing: 0.5em; }
+.admin-login__demo { display: grid; gap: 10px; padding: 14px; border-radius: var(--raio); background: var(--cor-fundo-alt); }
+.admin-login__demo p { font-size: 0.88rem; margin: 0; }
+.admin-login__voltar { font-size: 0.85rem; color: var(--cor-texto-claro); }
+.admin-status { color: #A02828; font-size: 0.88rem; margin: 0; min-height: 1em; }
+
+/* ---------- Estrutura ---------- */
+.admin-painel { display: grid; min-height: 100vh; }
+.admin-painel[hidden] { display: none; }
+.admin-lateral {
+  background: var(--cor-marinho); color: #fff;
+  padding: 14px 16px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  position: sticky; top: 0; z-index: 20;
+}
+.admin-lateral__logo { width: 130px; display: block; }
+.admin-lateral__logo .logo-san__texto { fill: #fff; }
+.admin-lateral__logo .logo-san__mangueira { stroke: #6E8BFF; }
+.admin-nav { display: flex; gap: 4px; overflow-x: auto; order: 3; width: 100%; scrollbar-width: none; }
+.admin-nav::-webkit-scrollbar { display: none; }
+.admin-nav a {
+  flex: none; display: inline-flex; align-items: center; gap: 8px;
+  padding: 9px 12px; border-radius: 10px;
+  color: rgba(255,255,255,0.72); text-decoration: none; font-weight: 600; font-size: 0.92rem;
+  transition: background .2s, color .2s;
+}
+.admin-nav a svg { width: 18px; height: 18px; }
+.admin-nav a:hover { background: rgba(255,255,255,0.08); color: #fff; }
+.admin-nav a[aria-current="page"] { background: rgba(226,170,51,0.16); color: var(--cor-latao-claro); }
+.admin-lateral__rodape { display: flex; gap: 8px; margin-left: auto; }
+
+.admin-principal { padding: 20px 16px 60px; min-width: 0; }
+.admin-demo-aviso {
+  background: rgba(226,170,51,0.16); color: #6B4A06; border: 1px solid rgba(226,170,51,0.5);
+  padding: 10px 14px; border-radius: var(--raio); font-size: 0.88rem; margin-bottom: 16px;
+}
+.admin-barra { display: flex; justify-content: space-between; align-items: end; gap: 12px; flex-wrap: wrap; margin-bottom: 18px; }
+.admin-barra h1 { font-size: clamp(1.6rem, 4vw, 2.2rem); margin: 0; }
+.admin-barra .rotulo { margin-bottom: 4px; }
+.admin-barra__acoes { display: flex; gap: 8px; align-items: center; }
+.admin-barra select, .admin-busca {
+  padding: 10px 12px; border-radius: 10px; border: 1.5px solid var(--cor-borda); background: #fff;
+  font: inherit; font-size: 0.92rem; color: var(--cor-texto);
+}
+
+@media (min-width: 1000px) {
+  .admin-painel { grid-template-columns: 236px 1fr; }
+  .admin-lateral {
+    flex-direction: column; align-items: stretch; height: 100vh; padding: 24px 16px;
+    gap: 28px; flex-wrap: nowrap;
+  }
+  .admin-lateral__logo { width: 180px; }
+  .admin-nav { flex-direction: column; order: 0; overflow: visible; }
+  .admin-nav a { padding: 11px 14px; }
+  .admin-lateral__rodape { margin: auto 0 0; flex-direction: column; }
+  .admin-principal { padding: 28px 36px 60px; }
+}
+
+/* ---------- KPIs ---------- */
+.kpis { display: grid; gap: 12px; grid-template-columns: repeat(2, minmax(0, 1fr)); margin-bottom: 16px; }
+@media (min-width: 760px) { .kpis { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
+.kpi { background: #fff; border: 1px solid var(--cor-borda); border-radius: var(--raio-grande); padding: 16px; display: grid; gap: 6px; align-content: start; }
+.kpi__rotulo { font: 600 0.7rem/1.2 var(--fonte-tecnica); letter-spacing: 0.08em; text-transform: uppercase; color: var(--cor-texto-claro); }
+.kpi__linha { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.kpi__valor { font: 900 1.9rem/1 var(--fonte-titulo); color: var(--cor-marinho); font-variant-numeric: tabular-nums; font-variation-settings: "wdth" 112; }
+.kpi__delta { font: 700 0.72rem/1 var(--fonte-tecnica); padding: 4px 6px; border-radius: 6px; }
+.kpi__delta--sobe { background: rgba(28,138,78,0.12); color: var(--cor-sucesso); }
+.kpi__delta--desce { background: rgba(160,40,40,0.1); color: #A02828; }
+.kpi__dica { font-size: 0.8rem; color: var(--cor-texto-claro); }
+
+/* ---------- Cartões / gráficos ---------- */
+.admin-grade { display: grid; gap: 14px; }
+@media (min-width: 900px) { .admin-grade--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); } .admin-cartao--largo { grid-column: 1 / -1; } }
+.admin-cartao { background: #fff; border: 1px solid var(--cor-borda); border-radius: var(--raio-grande); padding: 18px; min-width: 0; }
+.admin-cartao__topo { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+.admin-cartao h2 { font-size: 1.05rem; margin: 0; text-transform: none; font-weight: 800; letter-spacing: 0; font-variation-settings: "wdth" 100; }
+.admin-cartao--destaque { border-color: rgba(226,170,51,0.55); background: linear-gradient(160deg, #FFFBF0, #fff); margin-bottom: 14px; }
+.admin-dica { font-size: 0.82rem; color: var(--cor-texto-claro); margin: 0 0 10px; }
+.admin-cartao__topo .admin-dica { margin: 0; }
+.admin-link { color: var(--cor-loja); font-weight: 600; font-size: 0.88rem; }
+.grafico { position: relative; height: 260px; }
+.grafico--baixo { height: 220px; }
+
+.barras { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.barra__topo { display: flex; align-items: center; gap: 8px; font-size: 0.9rem; margin-bottom: 5px; }
+.barra__nome { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--cor-texto); }
+.barra__valor { font: 600 0.82rem/1 var(--fonte-tecnica); color: var(--cor-texto); font-variant-numeric: tabular-nums; }
+.barra__trilho { height: 8px; border-radius: 4px; background: var(--cor-fundo-alt); overflow: hidden; }
+.barra__fill { display: block; height: 100%; width: var(--p); border-radius: 4px; background: var(--cor-loja); animation: encher .9s var(--transicao-suave) both; transform-origin: left; }
+@keyframes encher { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+.barra--vazia { color: var(--cor-texto-claro); font-size: 0.9rem; }
+
+.selo { display: inline-block; font: 700 0.66rem/1 var(--fonte-tecnica); letter-spacing: 0.04em; text-transform: uppercase; padding: 4px 6px; border-radius: 5px; vertical-align: middle; }
+.selo--alerta { background: rgba(226,170,51,0.2); color: #7A5408; }
+.insight__chips { display: flex; flex-wrap: wrap; gap: 6px; }
+
+/* ---------- Tabelas ---------- */
+.admin-ferramentas { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.admin-busca { flex: 1 1 260px; max-width: 460px; }
+.admin-tabela-scroll { overflow-x: auto; background: #fff; border: 1px solid var(--cor-borda); border-radius: var(--raio-grande); }
+.admin-tabela { width: 100%; border-collapse: collapse; font-size: 0.9rem; min-width: 720px; }
+.admin-tabela th { text-align: left; font: 600 0.7rem/1 var(--fonte-tecnica); letter-spacing: 0.08em; text-transform: uppercase; color: var(--cor-texto-claro); padding: 14px; border-bottom: 1px solid var(--cor-borda); background: #FAFBFE; position: sticky; top: 0; }
+.admin-tabela td { padding: 12px 14px; border-bottom: 1px solid var(--cor-borda); vertical-align: middle; }
+.admin-tabela tr:last-child td { border-bottom: 0; }
+.admin-tabela tbody tr:hover { background: #F8FAFF; }
+.admin-tabela .num { text-align: right; font-variant-numeric: tabular-nums; }
+.admin-vazio { color: var(--cor-texto-claro); text-align: center; padding: 28px !important; }
+.avatar { display: inline-grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: var(--cor-marinho); color: var(--cor-latao-claro); font: 800 0.85rem/1 var(--fonte-titulo); margin-right: 10px; vertical-align: middle; }
+.avatar--grande { width: 56px; height: 56px; font-size: 1.4rem; margin: 0; }
+.admin-check { display: inline-flex; align-items: center; gap: 8px; font-size: 0.92rem; cursor: pointer; }
+
+/* ---------- Orçamentos ---------- */
+.admin-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+.admin-chip { padding: 8px 14px; border-radius: 999px; border: 1.5px solid var(--cor-borda); background: #fff; font: 600 0.78rem/1 var(--fonte-tecnica); cursor: pointer; color: var(--cor-texto); }
+.admin-chip[aria-pressed="true"] { background: var(--cor-primaria); border-color: var(--cor-primaria); color: #fff; }
+.lista-orcamentos { display: grid; gap: 12px; }
+@media (min-width: 900px) { .lista-orcamentos { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.orcamento { background: #fff; border: 1px solid var(--cor-borda); border-left: 4px solid var(--cor-loja); border-radius: var(--raio); padding: 14px 16px; display: grid; gap: 10px; align-content: start; }
+.orcamento[data-status="atendendo"] { border-left-color: var(--cor-latao); }
+.orcamento[data-status="fechado"] { border-left-color: var(--cor-sucesso); }
+.orcamento[data-status="perdido"] { border-left-color: #9AA1B5; }
+.orcamento__topo { display: flex; justify-content: space-between; gap: 10px; align-items: start; }
+.orcamento__topo > div { display: grid; gap: 2px; min-width: 0; }
+.orcamento__meta { font-size: 0.8rem; color: var(--cor-texto-claro); }
+.orcamento__status { padding: 6px 8px; border-radius: 8px; border: 1.5px solid var(--cor-borda); font: inherit; font-size: 0.85rem; background: #fff; }
+.orcamento__itens { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; font-size: 0.9rem; }
+.orcamento__itens li { display: grid; grid-template-columns: 34px 1fr; }
+.orcamento__itens em { color: var(--cor-texto-claro); font-style: normal; font-size: 0.85rem; }
+.orcamento__qtd { font: 600 0.82rem/1.6 var(--fonte-tecnica); color: var(--cor-loja); }
+.orcamento .botao { justify-self: start; }
+
+/* ---------- Detalhe do cliente ---------- */
+.admin-detalhe-fundo { position: fixed; inset: 0; background: rgba(8,14,40,0.5); z-index: 40; }
+.admin-detalhe {
+  position: fixed; top: 0; right: 0; bottom: 0; width: min(460px, 100%); z-index: 50;
+  background: var(--cor-fundo-alt); padding: 24px 20px; overflow-y: auto;
+  transform: translateX(105%); visibility: hidden;
+  transition: transform .5s var(--transicao-suave), visibility 0s .5s;
+  box-shadow: -30px 0 60px -20px rgba(14,26,74,0.4);
+}
+.admin-detalhe.aberto { transform: none; visibility: visible; transition: transform .5s var(--transicao-suave); }
+.admin-detalhe__fechar { position: absolute; top: 14px; right: 14px; width: 38px; height: 38px; border-radius: 50%; border: 0; background: #fff; font-size: 1.3rem; cursor: pointer; }
+.admin-detalhe [data-detalhe-conteudo] { display: grid; gap: 14px; }
+.detalhe__topo { display: flex; gap: 14px; align-items: center; padding-right: 40px; }
+.detalhe__topo h2 { margin: 0; font-size: 1.4rem; text-transform: none; }
+.detalhe__topo p { margin: 2px 0 0; font-size: 0.9rem; }
+.detalhe__numeros { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.detalhe__numeros div { background: #fff; border-radius: var(--raio); padding: 10px; display: grid; gap: 2px; text-align: center; }
+.detalhe__numeros strong { font: 800 1.2rem/1.1 var(--fonte-titulo); color: var(--cor-marinho); }
+.detalhe__numeros span { font-size: 0.75rem; color: var(--cor-texto-claro); }
+.admin-detalhe h3 { margin: 8px 0 0; }
+.linha-clicavel { cursor: pointer; }

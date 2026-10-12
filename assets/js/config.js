@@ -19,6 +19,9 @@ window.SAN_CONFIG = {
 
   instagramUrl: "https://www.instagram.com/san_comercio_de_mangueiras/",
   instagramUsuario: "@san_comercio_de_mangueiras",
+  // PENDENTE: link exato da página do Facebook (o print não mostra a URL).
+  // Enquanto isso, abre a busca do Facebook já filtrada pela loja.
+  facebookUrl: "https://www.facebook.com/search/top?q=San%20Com%C3%A9rcio%20Itapetininga",
 
   enderecoCompleto:
     "Av. 5 de Novembro, 961 — Vila Nastri, Itapetininga - SP, 18207-320",

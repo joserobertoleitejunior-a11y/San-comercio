@@ -50,4 +50,17 @@ Frases oficiais usadas (das artes do cliente): "Tudo o que você precisa, em um 
 - [ ] Formas de pagamento e se faz entrega/venda para empresas (com nota) — não publicado por falta de confirmação.
 - [ ] Domínio próprio (ex.: `sancomercio.com.br`) — hoje está em GitHub Pages.
 - [ ] Personagem/mascote da San Comércio (o José vai passar o briefing).
-- [ ] Projeto Supabase próprio (tabela `orcamentos` + analytics) e, depois, painel admin reaproveitado da Remop.
+- [ ] Criar o projeto Supabase da San e rodar `supabase/schema.sql` (painel admin já está pronto, hoje em modo demonstração).
+
+## 6. Ideias para encantar o dono (apresentação)
+
+1. **Mostrar no celular dele, no balcão** — abrir o site no próprio WhatsApp dele e mandar uma lista de orçamento de teste pro número da loja: ele vê o pedido chegando formatado.
+2. **Painel em modo demonstração** — `admin.html` → "Ver demonstração": visitas, horário de pico, o que o pessoal busca e **não acha** (vira decisão de estoque).
+3. **Placa/QR no balcão** — "Monte sua lista pelo site" com QR para o site (cliente faz o pedido na fila).
+4. **Google Meu Negócio** — completar o perfil (fotos novas da loja azul, horário, link do site): é de onde vem a maior parte das visitas.
+5. **Fotos de verdade em 1 tarde** — 20 fotos de produto no fundo branco + a prensa trabalhando; troca direto nos arquivos `prod-*.webp`.
+6. **Vídeo curto da prensagem** (Reels) — "mangueira estourou? a gente prensa aqui na loja" — e embed no site.
+7. **Personagem da San** (mascote) — guia o cliente no site, como o Seu Remo.
+8. **Catálogo vivo** — próximo passo: o dono cadastra produtos/promoções pelo painel (sem mexer em código).
+9. **Código de verificação no WhatsApp** — com a API oficial do WhatsApp Business, o "Entrar com WhatsApp" passa a confirmar o número por código.
+10. **Relatório mensal automático** — resumo do mês (visitas, orçamentos, mais buscados) enviado pro WhatsApp/e-mail do dono.

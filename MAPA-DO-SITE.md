@@ -31,6 +31,13 @@
 | Cores, fontes, raios, sombras | `assets/css/style.css` | `:root` no topo (linhas 1–45) |
 | Velocidade/efeitos das animações | `assets/js/animacoes.js` | ver seção 4 abaixo |
 | SEO (título, descrição, OG) | cada `.html` | `<head>` — `title`, `meta description`, `og:*`, JSON-LD (só na home+internas) |
+| Ícones flutuantes abaixo do header (igual Remop) | as 3 páginas | `.hero__faixa-contatos` logo no início de cada hero; links vêm do `config.js` (`facebookUrl` ainda provisório) |
+| Botão "Entrar com WhatsApp" / modal | as 3 páginas | `.cabecalho__entrar` no header + `===== MODAL: ENTRAR COM WHATSAPP`; lógica em `identificacao.js` |
+| Busca do catálogo | `index.html` | `.busca-produtos` + `.busca-vazia` dentro de `===== PRODUTOS`; lógica em `main.js → iniciarFiltroProdutos()` |
+| Painel admin (abas, textos) | `admin.html` | seções `data-secao="visao/clientes/orcamentos/pesquisas/trafego"` |
+| PIN do painel / e-mail interno | `assets/js/admin.js` | `PAINEL_EMAIL_FIXO` e `SUFIXO_SENHA_PIN` no topo + usuário no Supabase |
+| Dados de demonstração do painel | `assets/js/admin-demo.js` | listas de nomes/cidades/termos fictícios |
+| Tabelas e segurança do banco | `supabase/schema.sql` | rodar uma vez no SQL Editor do Supabase |
 
 ## 2. Blocos REPETIDOS nas 3 páginas (mudar em todas)
 
@@ -39,7 +46,8 @@ Site estático sem build: estes blocos são idênticos em `index.html`, `institu
 - `<svg ... latao-grad>` (gradientes do latão) — logo após o `<body>`
 - `===== HEADER` — logo SVG inline, menu, botão WhatsApp, botão da lista
 - `===== CTA FINAL` — "Mande a lista. A gente separa."
-- `===== GAVETA: LISTA DE ORÇAMENTO`, `.flutuantes`, `.toast`
+- `.hero__faixa-contatos` (ícones flutuantes)
+- `===== GAVETA: LISTA DE ORÇAMENTO`, `.flutuantes`, `===== MODAL: ENTRAR COM WHATSAPP`, `.toast`
 - `===== FOOTER` + lista de `<script>` no fim
 - Versão de cache `?v=AAAAMMDDx` nos links de CSS/JS — **trocar nas 3 páginas a cada deploy** (evita o cliente ver versão velha)
 
@@ -55,9 +63,15 @@ assets/js/config.js        ★ Único ponto de configuração (contatos, horári
 assets/js/main.js          Links WhatsApp/contatos, menu, header que some/volta, horário + "aberto agora",
                            faixa arrastável, filtro do catálogo, FAQ, toast
 assets/js/lista-orcamento.js  Lista de orçamento (carrinho sem preço) → WhatsApp; ficha de prensagem; item livre
+assets/js/identificacao.js Cliente se identifica com nome + WhatsApp (salva no navegador + tabela identificacoes)
+admin.html                 Painel: Visão geral, Clientes, Orçamentos, Pesquisas, Tráfego (login por PIN)
+assets/css/admin.css       Visual do painel
+assets/js/admin.js         Lógica do painel (Supabase real ou modo demonstração), gráficos Chart.js, CSV
+assets/js/admin-demo.js    Gerador de dados fictícios pra apresentar o painel antes de ligar o banco
+supabase/schema.sql        Tabelas + RLS (site só insere; painel logado lê)
 assets/js/animacoes.js     GSAP + ScrollTrigger: preloader, hero, barra-mangueira, títulos, contadores, tilt, etc.
 assets/js/supabase-init.js Inicializa Supabase se config preenchida (senão, só WhatsApp)
-assets/js/analytics.js     Páginas vistas + cliques (só grava com Supabase ativo)
+assets/js/analytics.js     Páginas vistas, cliques e pesquisas, ligados ao WhatsApp do cliente (só com Supabase ativo)
 
 assets/img/                Fotos reais recortadas dos materiais do cliente (ver seção 5)
 PADROES-AGENCIA.md         Regras fixas da agência (Vibe Coding Process)
@@ -87,18 +101,20 @@ Tudo desliga com `prefers-reduced-motion`. Se o GSAP não carregar, o conteúdo 
 
 ## 5. Imagens (assets/img)
 
+Todas tratadas a partir dos prints do cliente (script em Python/Pillow, sem cara de print):
+fundo removido dos produtos, redução de ruído/artefatos JPEG, ampliação, nitidez e correção de cor.
+
 | Arquivo | Origem | Uso |
 |---|---|---|
-| `fachada-noite-san.jpg` | foto da fachada azul (fim de tarde) | hero home + internas, galeria, mosaico, OG |
-| `loja-lateral-san.jpg` | foto da lateral (Street View) | mosaico, história, galeria |
-| `loja-entrada-san.jpg` | recorte da capa do WhatsApp | mosaico, galeria |
-| `fachada-faixa-san.jpg` | recorte do letreiro (capa WhatsApp) | hero localização, galeria |
-| `flyer-9mil-san.jpg` | arte oficial "quase 9 mil itens" | galeria |
-| `cat-*.jpg` | recortes das artes de produtos do cliente | cards do catálogo |
-| `og-image-san.jpg` | 1200×630 a partir da fachada | compartilhamento (WhatsApp/Facebook) |
+| `fachada-noite-san.webp` | foto da fachada azul, tratada | hero home + internas, galeria, mosaico |
+| `loja-lateral-san.webp` | foto lateral (Street View), tratada | mosaico, história, galeria |
+| `loja-entrada-san.webp` | recorte da capa do WhatsApp, tratado | mosaico, galeria |
+| `fachada-faixa-san.webp` | letreiro da capa do WhatsApp, tratado | hero localização, galeria |
+| `prod-*.webp` | produtos recortados das artes (fundo transparente) | cards do catálogo, sobre fundo "estúdio" em CSS |
+| `og-image-san.jpg` | 1200×630 a partir da fachada | compartilhamento |
 | `favicon.svg` | desenhado (X de mangueiras) | aba do navegador |
 
-As fotos de categoria vieram de prints de baixa resolução — **trocar por fotos reais dos produtos** quando o cliente enviar (mesmo nome de arquivo = zero mudança no HTML). A loja amarela antiga **não** é usada no site.
+Quando o cliente mandar fotos reais em alta, basta trocar o arquivo mantendo o nome. A loja amarela antiga **não** é usada.
 
 ## 6. Logotipo
 

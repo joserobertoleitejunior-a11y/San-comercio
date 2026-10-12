@@ -28,50 +28,23 @@ Ao trocar para domínio próprio, atualizar `canonical`, `og:*`, JSON-LD nas 3 p
 Funciona 100% sem backend: guarda a lista no navegador (localStorage) e envia pro
 WhatsApp formatada. Nunca mostra preço nem confirma estoque — o atendente humano fecha.
 
-## Supabase (opcional — quando quiser guardar orçamentos e métricas)
+## Supabase (banco do painel admin)
+
+Sem Supabase o site funciona igual (tudo via WhatsApp) e o painel abre em **modo demonstração**.
+Para ligar os dados reais:
 
 1. Criar projeto em supabase.com e preencher `supabase.url`/`anonKey` em `assets/js/config.js`
-   (a anon key não é segredo; a proteção é o RLS abaixo).
-2. Rodar no SQL Editor:
+   (a anon key não é segredo; a proteção é o RLS).
+2. Rodar `supabase/schema.sql` no SQL Editor (tabelas `identificacoes`, `orcamentos`,
+   `paginas_vistas`, `cliques`, `pesquisas` + políticas: o site só insere, o painel logado lê).
+3. Authentication → Users → Add user: `painel@san-comercio.internal`, senha = PIN + sufixo de
+   `assets/js/admin.js` (padrão `2580-SanPainel2026!`), marcar **Auto Confirm User**.
+4. Abrir `admin.html` e entrar com o PIN.
 
-```sql
-create table orcamentos (
-  id bigint generated always as identity primary key,
-  nome text default '',
-  cidade text default '',
-  itens jsonb not null default '[]',
-  pagina text default '',
-  status text default 'novo',
-  criado_em timestamptz not null default now()
-);
-create table paginas_vistas (
-  id bigint generated always as identity primary key,
-  pagina text default '', referencia text default '', visitante_id text default '',
-  criado_em timestamptz not null default now()
-);
-create table cliques (
-  id bigint generated always as identity primary key,
-  tipo text default '', detalhe text default '', pagina text default '', visitante_id text default '',
-  criado_em timestamptz not null default now()
-);
-
-alter table orcamentos enable row level security;
-alter table paginas_vistas enable row level security;
-alter table cliques enable row level security;
-
-create policy "criacao publica" on orcamentos for insert to anon with check (true);
-create policy "leitura autenticada" on orcamentos for select to authenticated using (true);
-create policy "criacao publica" on paginas_vistas for insert to anon with check (true);
-create policy "leitura autenticada" on paginas_vistas for select to authenticated using (true);
-create policy "criacao publica" on cliques for insert to anon with check (true);
-create policy "leitura autenticada" on cliques for select to authenticated using (true);
-```
-
-Nunca liberar leitura pública dessas tabelas (são leads do cliente).
+Nunca liberar leitura pública dessas tabelas (são dados de clientes — LGPD).
 
 ## Backlog
 
 - Personagem/mascote da San Comércio (assistente + tour, nos moldes do "Seu Remo")
-- Painel administrativo (reaproveitar `admin.html` da Remop)
 - Fotos reais em alta dos produtos e da prensa
 - Ver pendências em `BRIEFING-SAN.md`

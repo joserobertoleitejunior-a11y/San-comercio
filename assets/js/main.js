@@ -24,6 +24,7 @@
     });
     var mapa = {
       "[data-link-instagram]": config.instagramUrl,
+      "[data-link-facebook]": config.facebookUrl,
       "[data-link-maps]": config.mapsUrl,
       "[data-link-waze]": config.wazeUrl,
       "[data-link-email]": config.email ? "mailto:" + config.email : null,
@@ -179,11 +180,184 @@
   }
 
   /**
+   * [Copiada da Remop, comportamento idêntico]
+   * Faixa de ícones no topo da hero: anda sozinha e também pode ser
+   * arrastada com o dedo/mouse (pointer events cobrem os dois). Solta
+   * arrastando e ela continua girando com a velocidade do arrasto,
+   * desacelerando por atrito até voltar a andar sozinha. Como os
+   * ícones aparecem duplicados no HTML (dois conjuntos iguais), a
+   * posição é sempre "dobrada" de volta pra dentro de um conjunto,
+   * criando a ilusão de loop infinito nos dois sentidos.
+   */
+  function iniciarFaixaContatos() {
+    var trilha = document.querySelector(".hero__faixa-trilha");
+    if (!trilha) return;
+
+    var reduzMovimento = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+
+    var VELOCIDADE_AUTOMATICA = 0.035; // px por ms
+    var ATRITO = 0.94;
+    var LIMIAR_CLIQUE = 6; // px — acima disso, não deixa o clique passar pro link
+
+    var larguraConjunto = trilha.scrollWidth / 2;
+    window.addEventListener("resize", function () {
+      larguraConjunto = trilha.scrollWidth / 2;
+    });
+
+    var posicao = 0;
+    var arrastando = false;
+    var moveuBastante = false;
+    var somaMovimento = 0;
+    var pontoX = 0;
+    var pontoT = 0;
+    var velocidade = 0;
+    var quadroAtivo = null;
+    var ultimoQuadroAuto = null;
+    var ultimoQuadroMomento = null;
+    // Só roda o loop de animação enquanto a faixa está visível na tela
+    // — sem isso, o requestAnimationFrame ficava rodando pra sempre em
+    // segundo plano depois que o visitante rolava a página pra baixo,
+    // gastando bateria/CPU à toa e pesando no resto dos efeitos.
+    var visivel = true;
+    if ("IntersectionObserver" in window) {
+      var observador = new IntersectionObserver(
+        function (entradas) {
+          var estavaVisivel = visivel;
+          visivel = entradas[0].isIntersecting;
+          if (visivel && !estavaVisivel && !arrastando && !quadroAtivo) {
+            quadroAtivo = requestAnimationFrame(autoRolar);
+          }
+        },
+        { threshold: 0 }
+      );
+      observador.observe(trilha);
+    }
+
+    function normalizar() {
+      if (larguraConjunto <= 0) return;
+      while (posicao <= -larguraConjunto) posicao += larguraConjunto;
+      while (posicao > 0) posicao -= larguraConjunto;
+    }
+
+    function desenhar() {
+      normalizar();
+      trilha.style.transform = "translateX(" + posicao + "px)";
+    }
+
+    function cancelarQuadro() {
+      if (quadroAtivo) cancelAnimationFrame(quadroAtivo);
+      quadroAtivo = null;
+    }
+
+    function autoRolar(agora) {
+      if (!visivel) {
+        // Não agenda o próximo quadro — quem acorda o loop de novo é
+        // o próprio IntersectionObserver, via aoFicarVisivel().
+        quadroAtivo = null;
+        ultimoQuadroAuto = null;
+        return;
+      }
+      if (ultimoQuadroAuto === null) ultimoQuadroAuto = agora;
+      var passo = agora - ultimoQuadroAuto;
+      ultimoQuadroAuto = agora;
+      if (!arrastando && !reduzMovimento) {
+        posicao -= VELOCIDADE_AUTOMATICA * passo;
+        desenhar();
+      }
+      quadroAtivo = requestAnimationFrame(autoRolar);
+    }
+
+    function aplicarMomento(agora) {
+      if (ultimoQuadroMomento === null) ultimoQuadroMomento = agora;
+      var passo = agora - ultimoQuadroMomento;
+      ultimoQuadroMomento = agora;
+      posicao += velocidade * passo;
+      velocidade *= ATRITO;
+      desenhar();
+      if (Math.abs(velocidade) > 0.01) {
+        quadroAtivo = requestAnimationFrame(aplicarMomento);
+      } else {
+        ultimoQuadroMomento = null;
+        ultimoQuadroAuto = null;
+        quadroAtivo = requestAnimationFrame(autoRolar);
+      }
+    }
+
+    function aoPressionar(evento) {
+      arrastando = true;
+      moveuBastante = false;
+      somaMovimento = 0;
+      cancelarQuadro();
+      pontoX = evento.clientX;
+      pontoT = performance.now();
+      velocidade = 0;
+      trilha.classList.add("arrastando");
+      if (trilha.setPointerCapture) {
+        try {
+          trilha.setPointerCapture(evento.pointerId);
+        } catch (erro) {}
+      }
+    }
+
+    function aoMover(evento) {
+      if (!arrastando) return;
+      var agora = performance.now();
+      var deltaX = evento.clientX - pontoX;
+      var deltaT = Math.max(agora - pontoT, 1);
+      posicao += deltaX;
+      velocidade = deltaX / deltaT;
+      somaMovimento += Math.abs(deltaX);
+      if (somaMovimento > LIMIAR_CLIQUE) moveuBastante = true;
+      pontoX = evento.clientX;
+      pontoT = agora;
+      desenhar();
+    }
+
+    function aoSoltar() {
+      if (!arrastando) return;
+      arrastando = false;
+      trilha.classList.remove("arrastando");
+      cancelarQuadro();
+      ultimoQuadroMomento = null;
+      if (Math.abs(velocidade) > 0.02 && !reduzMovimento) {
+        quadroAtivo = requestAnimationFrame(aplicarMomento);
+      } else {
+        ultimoQuadroAuto = null;
+        quadroAtivo = requestAnimationFrame(autoRolar);
+      }
+    }
+
+    trilha.addEventListener("pointerdown", aoPressionar);
+    trilha.addEventListener("pointermove", aoMover);
+    trilha.addEventListener("pointerup", aoSoltar);
+    trilha.addEventListener("pointercancel", aoSoltar);
+    trilha.addEventListener("pointerleave", function (evento) {
+      if (arrastando && evento.buttons === 0) aoSoltar();
+    });
+    // Depois de um arrasto de verdade, o clique que sobra não deve
+    // abrir o link do ícone — só some quando foi mesmo um toque.
+    trilha.addEventListener(
+      "click",
+      function (evento) {
+        if (moveuBastante) {
+          evento.preventDefault();
+          evento.stopPropagation();
+        }
+      },
+      true
+    );
+
+    quadroAtivo = requestAnimationFrame(autoRolar);
+  }
+
+  /**
    * Faixa de categorias: anda sozinha e pode ser arrastada (com inércia).
    * Mesma lógica da faixa de ícones da hero da Remop — itens aparecem
    * duplicados no HTML pra criar o loop infinito nos dois sentidos.
    */
-  function iniciarFaixaArrastavel() {
+  function iniciarFaixaCategorias() {
     var faixa = document.querySelector(".faixa");
     var trilha = document.querySelector(".faixa__trilha");
     if (!faixa || !trilha) return;
@@ -261,30 +435,66 @@
     quadro = requestAnimationFrame(loop);
   }
 
-  /** Filtro do catálogo por segmento (Hidráulica, Automotivo, etc.). */
+  /**
+   * Catálogo: filtro por área + busca por texto (nome, descrição e tags).
+   * As buscas vão pro painel admin (aba Pesquisas) — inclusive as que não
+   * acham nada, que mostram o que o cliente procura e o site não tem.
+   */
   function iniciarFiltroProdutos() {
     var botoes = document.querySelectorAll("[data-filtro]");
     var cards = document.querySelectorAll("[data-segmentos]");
-    if (!botoes.length || !cards.length) return;
+    var busca = document.querySelector("[data-busca-produtos]");
+    var vazia = document.querySelector("[data-busca-vazia]");
+    if (!cards.length) return;
+    var filtroAtual = "todos";
+    var timerRegistro = null;
+
+    function normalizar(texto) {
+      return String(texto || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    }
+
+    function aplicar(animar) {
+      var termo = busca ? normalizar(busca.value.trim()) : "";
+      var mostrar = [];
+      cards.forEach(function (card) {
+        var segs = card.getAttribute("data-segmentos").split(" ");
+        var porArea = filtroAtual === "todos" || segs.indexOf(filtroAtual) !== -1;
+        var porTexto = !termo || normalizar(card.textContent).indexOf(termo) !== -1;
+        card.hidden = !(porArea && porTexto);
+        if (!card.hidden) mostrar.push(card);
+      });
+      if (vazia) {
+        vazia.hidden = mostrar.length > 0;
+        var alvo = vazia.querySelector("[data-termo-buscado]");
+        var botao = vazia.querySelector("[data-adicionar-item]");
+        if (alvo) alvo.textContent = busca ? busca.value.trim() : "";
+        if (botao && busca) botao.setAttribute("data-adicionar-item", busca.value.trim());
+      }
+      if (animar && window.SanAnimacoes && window.SanAnimacoes.entrarCards) {
+        window.SanAnimacoes.entrarCards(mostrar);
+      }
+      return mostrar.length;
+    }
 
     botoes.forEach(function (botao) {
       botao.addEventListener("click", function () {
-        var filtro = botao.getAttribute("data-filtro");
+        filtroAtual = botao.getAttribute("data-filtro");
         botoes.forEach(function (b) { b.setAttribute("aria-pressed", b === botao ? "true" : "false"); });
-
-        var mostrar = [];
-        cards.forEach(function (card) {
-          var segs = card.getAttribute("data-segmentos").split(" ");
-          var visivel = filtro === "todos" || segs.indexOf(filtro) !== -1;
-          card.hidden = !visivel;
-          if (visivel) mostrar.push(card);
-        });
-
-        if (window.SanAnimacoes && window.SanAnimacoes.entrarCards) {
-          window.SanAnimacoes.entrarCards(mostrar);
-        }
+        aplicar(true);
       });
     });
+
+    if (busca) {
+      busca.addEventListener("input", function () {
+        var achados = aplicar(false);
+        clearTimeout(timerRegistro);
+        timerRegistro = setTimeout(function () {
+          if (window.SanAnalytics) window.SanAnalytics.registrarPesquisa(busca.value, achados, "busca");
+        }, 1200);
+      });
+      var formBusca = busca.closest("form");
+      if (formBusca) formBusca.addEventListener("submit", function (e) { e.preventDefault(); });
+    }
   }
 
   /** FAQ: abre uma resposta por vez. */
@@ -316,7 +526,8 @@
     iniciarCabecalho();
     renderizarHorario();
     setInterval(renderizarHorario, 60000);
-    iniciarFaixaArrastavel();
+    iniciarFaixaContatos();
+    iniciarFaixaCategorias();
     iniciarFiltroProdutos();
     iniciarFaq();
     document.querySelectorAll("[data-ano-atual]").forEach(function (el) {
