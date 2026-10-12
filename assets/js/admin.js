@@ -615,12 +615,15 @@
     el.formLogin.addEventListener("submit", tratarLogin);
 
     var supabasePronto = window.SanSupabase && window.SanSupabase.pronto;
+    // A demonstração fica sempre disponível: com o banco recém-criado ainda
+    // não há dados reais, e é ela que mostra o painel cheio ao apresentar.
+    document.querySelector("[data-bloco-demo]").hidden = false;
+    document.querySelector("[data-ver-demo]").addEventListener("click", function () { modoDemo = true; mostrarPainel(); });
     if (!supabasePronto) {
       el.statusLogin.textContent = "";
       el.formLogin.pin.disabled = true;
       document.querySelector("[data-botao-entrar]").disabled = true;
-      document.querySelector("[data-bloco-demo]").hidden = false;
-      document.querySelector("[data-ver-demo]").addEventListener("click", function () { modoDemo = true; mostrarPainel(); });
+      document.querySelector("[data-texto-demo]").textContent = "O banco de dados ainda não foi ligado. Dá pra ver o painel funcionando com dados de exemplo:";
       return;
     }
     cliente().auth.onAuthStateChange(function (evento, sessao) {

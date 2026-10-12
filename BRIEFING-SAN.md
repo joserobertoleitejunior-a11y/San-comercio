@@ -50,7 +50,7 @@ Frases oficiais usadas (das artes do cliente): "Tudo o que você precisa, em um 
 - [ ] Formas de pagamento e se faz entrega/venda para empresas (com nota) — não publicado por falta de confirmação.
 - [ ] Domínio próprio (ex.: `sancomercio.com.br`) — hoje está em GitHub Pages.
 - [ ] Personagem/mascote da San Comércio (o José vai passar o briefing).
-- [ ] Criar o projeto Supabase da San e rodar `supabase/schema.sql` (painel admin já está pronto, hoje em modo demonstração).
+- [x] Projeto Supabase criado e ligado (schema aplicado, RLS validado, usuário do painel criado).
 
 ## 6. Ideias para encantar o dono (apresentação)
 

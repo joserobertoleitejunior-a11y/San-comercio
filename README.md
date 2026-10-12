@@ -28,20 +28,20 @@ Ao trocar para domínio próprio, atualizar `canonical`, `og:*`, JSON-LD nas 3 p
 Funciona 100% sem backend: guarda a lista no navegador (localStorage) e envia pro
 WhatsApp formatada. Nunca mostra preço nem confirma estoque — o atendente humano fecha.
 
-## Supabase (banco do painel admin)
+## Supabase (banco do painel admin) — JÁ LIGADO
 
-Sem Supabase o site funciona igual (tudo via WhatsApp) e o painel abre em **modo demonstração**.
-Para ligar os dados reais:
+Projeto **San Comercio** (região sa-east-1, plano gratuito), ref `urxtnzdqeafmkmilmcpq`.
+URL e anon key já estão em `assets/js/config.js` (a anon key não é segredo; a proteção é o RLS).
 
-1. Criar projeto em supabase.com e preencher `supabase.url`/`anonKey` em `assets/js/config.js`
-   (a anon key não é segredo; a proteção é o RLS).
-2. Rodar `supabase/schema.sql` no SQL Editor (tabelas `identificacoes`, `orcamentos`,
-   `paginas_vistas`, `cliques`, `pesquisas` + políticas: o site só insere, o painel logado lê).
-3. Authentication → Users → Add user: `painel@san-comercio.internal`, senha = PIN + sufixo de
-   `assets/js/admin.js` (padrão `2580-SanPainel2026!`), marcar **Auto Confirm User**.
-4. Abrir `admin.html` e entrar com o PIN.
+- Tabelas e políticas: `supabase/schema.sql` (o site só **insere**; só o painel logado **lê**).
+- Login do painel: e-mail interno `painel@san-comercio.internal` + PIN de 8 dígitos
+  (a senha real é PIN + sufixo de `assets/js/admin.js`). **O PIN não fica no repositório** —
+  foi entregue ao José no chat. Para trocar: Supabase → Authentication → Users → reset password.
+- Enquanto não há dados reais, `admin.html` → "Ver demonstração" mostra o painel com dados de exemplo.
 
 Nunca liberar leitura pública dessas tabelas (são dados de clientes — LGPD).
+Pendente de segurança: ativar "Leaked password protection" em Authentication → Providers → Email
+(exige plano Pro; sem impacto aqui porque só existe 1 usuário, com PIN aleatório).
 
 ## Backlog
 

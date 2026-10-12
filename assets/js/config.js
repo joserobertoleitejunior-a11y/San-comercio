@@ -43,10 +43,10 @@ window.SAN_CONFIG = {
   },
   sabadoTexto: "Consulte pelo WhatsApp",
 
-  // Config pública do Supabase (anon key NÃO é segredo — a proteção é o
-  // RLS). Enquanto estiver "SUBSTITUIR", o site só usa o WhatsApp.
+  // Projeto Supabase "San Comercio" (sa-east-1). A anon key NÃO é segredo —
+  // a proteção é o RLS (site só insere; painel logado lê). Ver supabase/schema.sql.
   supabase: {
-    url: "SUBSTITUIR_URL_SUPABASE",
-    anonKey: "SUBSTITUIR_ANON_KEY",
+    url: "https://urxtnzdqeafmkmilmcpq.supabase.co",
+    anonKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVyeHRuemRxZWFmbWttaWxtY3BxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE4MTk5MjAsImV4cCI6MjEwNzM5NTkyMH0.2cdEEwo1xynZoM5qb9bY_p9gxCE6rmhf0ZWH1O7_-J8",
   },
 };
