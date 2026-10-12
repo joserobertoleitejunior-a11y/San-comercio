@@ -463,6 +463,8 @@
         card.hidden = !(porArea && porTexto);
         if (!card.hidden) mostrar.push(card);
       });
+      var grade = document.querySelector(".grid-produtos");
+      if (grade) grade.classList.toggle("grid-produtos--filtrado", filtroAtual !== "todos" || !!termo);
       if (vazia) {
         vazia.hidden = mostrar.length > 0;
         var alvo = vazia.querySelector("[data-termo-buscado]");

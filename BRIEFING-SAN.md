@@ -45,7 +45,7 @@ Frases oficiais usadas (das artes do cliente): "Tudo o que você precisa, em um 
 
 - [ ] Confirmar horário de terça a sexta e **sábado** (hoje o site mostra seg–sex 07h15–18h e sábado "consulte").
 - [x] Link da página do Facebook (recebido e aplicado).
-- [ ] Fotos reais dos produtos/balcão/prensa em boa resolução (as de categoria vêm de prints).
+- [ ] Fotos reais dos produtos/balcão/prensa em boa resolução (hoje o catálogo usa ilustrações próprias; ver MAPA §5).
 - [ ] Logo vetorial oficial (o do site é redesenho em SVG).
 - [ ] Formas de pagamento e se faz entrega/venda para empresas (com nota) — não publicado por falta de confirmação.
 - [ ] Domínio próprio (ex.: `sancomercio.com.br`) — hoje está em GitHub Pages.

@@ -585,65 +585,81 @@ p { margin: 0 0 14px; color: var(--cor-texto-claro); max-width: 65ch; }
 .filtro:hover { border-color: var(--cor-primaria); transform: translateY(-1px); }
 .filtro[aria-pressed="true"] { background: var(--cor-primaria); border-color: var(--cor-primaria); color: #fff; }
 
-.grid-produtos { display: grid; gap: 18px; grid-template-columns: 1fr; }
-@media (min-width: 620px) { .grid-produtos { grid-template-columns: repeat(2, 1fr); } }
-@media (min-width: 1000px) { .grid-produtos { grid-template-columns: repeat(3, 1fr); } }
+/* ---------- Serviços (faixa acima do catálogo) ---------- */
+.servicos-linha { display: grid; gap: 14px; grid-template-columns: 1fr; margin-bottom: 44px; }
+@media (min-width: 860px) { .servicos-linha { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.servico {
+  position: relative; overflow: hidden; isolation: isolate;
+  display: grid; gap: 10px; align-content: start;
+  padding: 24px 22px 22px; border-radius: var(--raio-grande);
+  background: radial-gradient(120% 90% at 100% 0%, #1D3490 0%, var(--cor-marinho) 60%);
+  color: #fff;
+  box-shadow: var(--sombra-card);
+  transition: transform .5s var(--transicao-suave), box-shadow .5s var(--transicao-suave);
+}
+.servico::before { content: ''; position: absolute; inset: 0; z-index: -1; background-image: linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px); background-size: 28px 28px; mask-image: linear-gradient(160deg, #000, transparent 70%); -webkit-mask-image: linear-gradient(160deg, #000, transparent 70%); }
+.servico:hover { transform: translateY(-5px); box-shadow: var(--sombra-elevada); }
+.servico__icone { width: 54px; height: 54px; border-radius: 14px; display: grid; place-items: center; color: var(--cor-marinho); background: linear-gradient(160deg, var(--cor-latao-claro), var(--cor-latao)); box-shadow: 0 10px 22px -10px rgba(226,170,51,0.8); }
+.servico__icone svg { width: 30px; height: 30px; }
+.servico h3 { color: #fff; margin: 6px 0 0; font-size: 1.25rem; font-family: var(--fonte-titulo); font-weight: 800; }
+.servico p { color: rgba(255,255,255,0.78); margin: 0 0 8px; font-size: 0.95rem; }
+.servico .botao { justify-self: start; }
+.subtitulo-catalogo { font-size: clamp(1.4rem, 3vw, 1.9rem); text-transform: uppercase; margin: 0 0 14px; }
+
+/* ---------- Catálogo de produtos ---------- */
+.grid-produtos { display: grid; gap: 18px; grid-template-columns: 1fr; grid-auto-flow: dense; }
+@media (min-width: 640px) { .grid-produtos { grid-template-columns: repeat(2, minmax(0, 1fr)); } .card-produto--g { grid-column: span 2; } }
+@media (min-width: 1000px) { .grid-produtos { grid-template-columns: repeat(12, minmax(0, 1fr)); } .card-produto { grid-column: span 4; } .card-produto--g { grid-column: span 8; } }
+/* Com filtro/busca ativos todos viram do mesmo tamanho (sem buracos) */
+@media (min-width: 640px) { .grid-produtos--filtrado .card-produto--g { grid-column: span 1; } }
+@media (min-width: 1000px) { .grid-produtos--filtrado .card-produto, .grid-produtos--filtrado .card-produto--g { grid-column: span 4; } }
 
 .card-produto {
-  position: relative;
-  display: flex; flex-direction: column;
-  background: #fff;
-  border: 1px solid var(--cor-borda);
-  border-radius: var(--raio-grande);
-  overflow: hidden;
-  transform-style: preserve-3d;
-  transition: box-shadow .4s var(--transicao-suave), border-color .3s;
+  position: relative; display: flex; flex-direction: column;
+  background: #fff; border: 1px solid var(--cor-borda); border-radius: var(--raio-grande);
+  overflow: hidden; transform-style: preserve-3d;
+  transition: box-shadow .5s var(--transicao-suave), border-color .3s;
   will-change: transform;
 }
 .card-produto:hover { box-shadow: var(--sombra-elevada); border-color: transparent; }
 .card-produto[hidden] { display: none; }
+@media (min-width: 1000px) {
+  .card-produto--g { flex-direction: row; }
+  .card-produto--g .card-produto__midia { flex: 0 0 46%; aspect-ratio: auto; min-height: 280px; }
+  .card-produto--g .card-produto__corpo { justify-content: center; padding: 28px 32px; gap: 12px; }
+  .card-produto--g .card-produto__acoes { margin-top: 12px; padding-top: 0; }
+  .card-produto--g h3 { font-size: 1.7rem; }
+  .card-produto--g p { font-size: 1.02rem; }
+  .card-produto--g .card-produto__midia { padding: 28px 24px; }
+}
 .card-produto__midia {
-  position: relative;
-  aspect-ratio: 16 / 9;
-  max-width: 100%;
-  background: var(--listras), linear-gradient(160deg, #F7F9FE, #E8EDF8);
-  overflow: hidden;
-  display: grid; place-items: center;
-}
-.card-produto__midia img {
-  width: 100%; height: 100%; object-fit: cover;
-  transition: transform .9s var(--transicao-suave);
-}
-.card-produto:hover .card-produto__midia img { transform: scale(1.07); }
-/* Produto recortado (fundo removido) sobre "estúdio" com luz radial —
-   tira a cara de print das artes originais. */
-.card-produto__midia--produto {
+  position: relative; aspect-ratio: 4 / 3; max-width: 100%; overflow: hidden;
+  display: grid; place-items: center; padding: 22px 18px 18px;
   background:
-    radial-gradient(60% 70% at 50% 45%, #FFFFFF 0%, rgba(255,255,255,0) 70%),
-    radial-gradient(120% 90% at 50% 120%, rgba(226,170,51,0.18), transparent 60%),
-    var(--listras), linear-gradient(165deg, #F4F7FE, #DCE4F6);
+    radial-gradient(70% 60% at 50% 55%, rgba(63,107,255,0.45), transparent 70%),
+    radial-gradient(90% 60% at 50% 120%, rgba(226,170,51,0.28), transparent 65%),
+    linear-gradient(165deg, #1B2F86 0%, var(--cor-marinho) 80%);
 }
-.card-produto__midia--produto::after {
-  content: ''; position: absolute; left: 18%; right: 18%; bottom: 9%; height: 14px;
-  background: radial-gradient(closest-side, rgba(14,26,74,0.28), transparent);
-  filter: blur(2px);
+.card-produto__midia::before {
+  content: ''; position: absolute; inset: 0;
+  background-image: linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px);
+  background-size: 26px 26px;
+  mask-image: radial-gradient(75% 75% at 50% 50%, #000, transparent 90%);
+  -webkit-mask-image: radial-gradient(75% 75% at 50% 50%, #000, transparent 90%);
 }
-.card-produto__midia--produto img {
-  position: relative; z-index: 1;
-  width: auto; height: auto; max-width: 78%; max-height: 80%;
-  object-fit: contain;
-  filter: drop-shadow(0 14px 16px rgba(14,26,74,0.28));
-  transition: transform .9s var(--transicao-suave);
-}
-.card-produto:hover .card-produto__midia--produto img { transform: translateY(-6px) scale(1.06) rotate(-1.5deg); }
-.card-produto__icone { width: 96px; height: 96px; color: var(--cor-primaria); transition: transform .6s var(--transicao-suave); }
-.card-produto:hover .card-produto__icone { transform: rotate(-8deg) scale(1.1); }
+.ilu { position: relative; width: 100%; height: 100%; max-height: 100%; overflow: visible; filter: drop-shadow(0 10px 14px rgba(0,0,0,0.35)); transition: transform .8s var(--transicao-suave); }
+.card-produto:hover .ilu { transform: translateY(-6px) scale(1.07) rotate(-1.5deg); }
+.ilu .fl { animation: fluir-card 1.3s linear infinite; animation-play-state: paused; }
+.card-produto:hover .ilu .fl { animation-play-state: running; }
+@keyframes fluir-card { to { stroke-dashoffset: -32; } }
+.ilu .gira { transform-box: fill-box; }
+.card-produto:hover .ilu .gira { animation: girar 3.2s linear infinite; }
+@keyframes girar { to { transform: rotate(360deg); } }
 .card-produto__codigo {
-  z-index: 2;
-  position: absolute; top: 12px; left: 12px;
+  z-index: 2; position: absolute; top: 12px; left: 12px;
   font-family: var(--fonte-tecnica); font-size: 0.68rem; letter-spacing: 0.08em;
-  background: var(--cor-marinho); color: var(--cor-latao-claro);
-  padding: 4px 8px; border-radius: 4px;
+  background: rgba(255,255,255,0.1); backdrop-filter: blur(6px); border: 1px solid rgba(255,255,255,0.18);
+  color: var(--cor-latao-claro); padding: 4px 8px; border-radius: 4px;
 }
 .card-produto__corpo { padding: 20px 20px 22px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
 .card-produto__corpo h3 { margin: 0; font-size: 1.2rem; font-family: var(--fonte-titulo); font-weight: 800; }

@@ -99,10 +99,7 @@ netlify.toml               Pronto pra migração futura pro Netlify
 
 Tudo desliga com `prefers-reduced-motion`. Se o GSAP não carregar, o conteúdo aparece normal (sem animação) e o preloader some sozinho em ~3s (trava de segurança no CSS).
 
-## 5. Imagens (assets/img)
-
-Todas tratadas a partir dos prints do cliente (script em Python/Pillow, sem cara de print):
-fundo removido dos produtos, redução de ruído/artefatos JPEG, ampliação, nitidez e correção de cor.
+## 5. Imagens e ilustrações (assets/img)
 
 | Arquivo | Origem | Uso |
 |---|---|---|
@@ -110,11 +107,19 @@ fundo removido dos produtos, redução de ruído/artefatos JPEG, ampliação, ni
 | `loja-lateral-san.webp` | foto lateral (Street View), tratada | mosaico, história, galeria |
 | `loja-entrada-san.webp` | recorte da capa do WhatsApp, tratado | mosaico, galeria |
 | `fachada-faixa-san.webp` | letreiro da capa do WhatsApp, tratado | hero localização, galeria |
-| `prod-*.webp` | produtos recortados das artes (fundo transparente) | cards do catálogo, sobre fundo "estúdio" em CSS |
 | `og-image-san.jpg` | 1200×630 a partir da fachada | compartilhamento |
 | `favicon.svg` | desenhado (X de mangueiras) | aba do navegador |
 
-Quando o cliente mandar fotos reais em alta, basta trocar o arquivo mantendo o nome. A loja amarela antiga **não** é usada.
+**Produtos do catálogo:** são ilustrações vetoriais (SVG) desenhadas no estilo da marca, embutidas em cada
+`<article class="card-produto">` do `index.html` (classe `.ilu`). Nítidas em qualquer tela, sem arquivo de imagem.
+As fotos recortadas dos prints foram descartadas (ficavam borradas ao ampliar). Quando o cliente mandar fotos reais
+em alta, trocar o `<svg class="ilu">` do card por `<img class="ilu" src="assets/img/NOME.webp" alt="...">`.
+Tamanho do card: classe `card-produto--g` = card largo de destaque (desktop); sem ela, card normal.
+Animações dos produtos (fluido correndo, polia girando) rodam só no hover — CSS `.ilu .fl` e `.ilu .gira`.
+
+**Serviços:** faixa `.servicos-linha` no topo de `===== PRODUTOS` (3 tiles: prensagem, orçamento por foto, ajuda pra achar a peça).
+
+A loja amarela antiga **não** é usada.
 
 ## 6. Logotipo
 

@@ -34,14 +34,15 @@ Projeto **San Comercio** (região sa-east-1, plano gratuito), ref `urxtnzdqeafmk
 URL e anon key já estão em `assets/js/config.js` (a anon key não é segredo; a proteção é o RLS).
 
 - Tabelas e políticas: `supabase/schema.sql` (o site só **insere**; só o painel logado **lê**).
-- Login do painel: e-mail interno `painel@san-comercio.internal` + PIN de 8 dígitos
-  (a senha real é PIN + sufixo de `assets/js/admin.js`). **O PIN não fica no repositório** —
-  foi entregue ao José no chat. Para trocar: Supabase → Authentication → Users → reset password.
+- Login do painel: e-mail interno `painel@san-comercio.internal` + PIN
+  (a senha real é PIN + sufixo de `assets/js/admin.js`). PIN provisório definido pelo José: **5786**.
+  **Trocar antes de divulgar o painel:** um PIN de 4 dígitos é fraco (o sufixo é público).
+  Para trocar: Supabase → Authentication → Users → reset password (use PIN de 8 dígitos).
 - Enquanto não há dados reais, `admin.html` → "Ver demonstração" mostra o painel com dados de exemplo.
 
 Nunca liberar leitura pública dessas tabelas (são dados de clientes — LGPD).
 Pendente de segurança: ativar "Leaked password protection" em Authentication → Providers → Email
-(exige plano Pro; sem impacto aqui porque só existe 1 usuário, com PIN aleatório).
+(exige plano Pro).
 
 ## Backlog
 
