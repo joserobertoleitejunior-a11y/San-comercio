@@ -66,6 +66,10 @@
       botao.setAttribute("aria-expanded", aberto ? "true" : "false");
       botao.setAttribute("aria-label", aberto ? "Fechar menu" : "Abrir menu");
     });
+    // Clique fora do menu fecha (importante no desktop, onde o painel é um dropdown)
+    document.addEventListener("click", function (e) {
+      if (nav.classList.contains("aberto") && !nav.contains(e.target) && !botao.contains(e.target)) fechar();
+    });
     nav.querySelectorAll("a").forEach(function (link) {
       link.addEventListener("click", fechar);
     });

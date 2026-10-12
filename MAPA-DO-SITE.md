@@ -32,6 +32,7 @@
 | Velocidade/efeitos das animações | `assets/js/animacoes.js` | ver seção 4 abaixo |
 | SEO (título, descrição, OG) | cada `.html` | `<head>` — `title`, `meta description`, `og:*`, JSON-LD (só na home+internas) |
 | Ícones flutuantes abaixo do header (igual Remop) | as 3 páginas | `.hero__faixa-contatos` logo no início de cada hero; links vêm do `config.js`  |
+| Link "Área administrativa" | as 3 páginas | último `<a class="nav-principal__admin">` do `<nav>` do header. Só aparece ao abrir o hambúrguer (que existe no celular e no desktop); no desktop vira um painel sob o botão. CSS: `.nav-principal__admin` |
 | Botão "Entrar com WhatsApp" / modal | as 3 páginas | `.cabecalho__entrar` no header + `===== MODAL: ENTRAR COM WHATSAPP`; lógica em `identificacao.js` |
 | Busca do catálogo | `index.html` | `.busca-produtos` + `.busca-vazia` dentro de `===== PRODUTOS`; lógica em `main.js → iniciarFiltroProdutos()` |
 | Painel admin (abas, textos) | `admin.html` | seções `data-secao="visao/clientes/orcamentos/pesquisas/trafego"` |

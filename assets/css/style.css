@@ -345,6 +345,7 @@ p { margin: 0 0 14px; color: var(--cor-texto-claro); max-width: 65ch; }
   background: var(--cor-marinho);
   clip-path: inset(0 0 100% 0);
   transition: clip-path .5s var(--transicao-suave);
+  max-height: calc(100svh - var(--altura-cabecalho)); overflow-y: auto;
 }
 .nav-principal.aberto { clip-path: inset(0 0 0 0); }
 .nav-principal a {
@@ -360,11 +361,12 @@ p { margin: 0 0 14px; color: var(--cor-texto-claro); max-width: 65ch; }
 
 @media (min-width: 960px) {
   .cabecalho__logo { width: 200px; }
-  .menu-toggle { display: none; }
+  /* O hambúrguer continua no desktop: ele abre o painel com a Área administrativa */
+  .menu-toggle { display: inline-grid; }
   .cabecalho__whats { display: inline-flex; }
-  .nav-principal {
+  .nav-principal, .nav-principal.aberto {
     position: static; display: flex; gap: 26px; padding: 0;
-    background: none; clip-path: none;
+    background: none; clip-path: none; max-height: none; overflow: visible;
   }
   .nav-principal a {
     color: var(--cor-texto) !important;
@@ -1142,7 +1144,31 @@ p { margin: 0 0 14px; color: var(--cor-texto-claro); max-width: 65ch; }
 .cabecalho__entrar[data-identificado="true"] .cabecalho__inicial { display: block; font: 800 1.05rem/1 var(--fonte-titulo); }
 
 .nav-principal__admin { font-size: 1rem !important; opacity: 0.7; }
-@media (min-width: 960px) { .nav-principal__admin { display: none; } }
+/* Desktop: a Área administrativa fica escondida e só aparece num painel
+   ao abrir o hambúrguer (igual à Remop: sem link administrativo à vista). */
+@media (min-width: 960px) {
+  .nav-principal .nav-principal__admin { display: none; }
+  .nav-principal.aberto .nav-principal__admin {
+    display: flex; align-items: center; gap: 10px;
+    position: absolute; top: calc(100% + 6px);
+    right: max(20px, calc((100vw - var(--largura-max)) / 2 + 20px));
+    padding: 14px 18px !important;
+    background: var(--cor-marinho); color: #fff !important; opacity: 1;
+    border-radius: 12px; border: 1px solid rgba(255,255,255,0.14) !important;
+    box-shadow: var(--sombra-elevada);
+    font-size: 0.92rem !important; white-space: nowrap;
+    animation: painel-menu .35s var(--transicao-suave) both;
+  }
+  .nav-principal.aberto .nav-principal__admin::before {
+    content: ''; width: 18px; height: 18px; flex: none;
+    background: currentColor;
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='4' y='11' width='16' height='10' rx='2'/%3E%3Cpath d='M8 11V7a4 4 0 0 1 8 0v4'/%3E%3C/svg%3E") center / contain no-repeat;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='4' y='11' width='16' height='10' rx='2'/%3E%3Cpath d='M8 11V7a4 4 0 0 1 8 0v4'/%3E%3C/svg%3E") center / contain no-repeat;
+  }
+  .nav-principal.aberto .nav-principal__admin::after { display: none; }
+  .nav-principal.aberto .nav-principal__admin:hover { background: var(--cor-primaria); }
+}
+@keyframes painel-menu { from { opacity: 0; transform: translateY(-8px) scale(.97); } to { opacity: 1; transform: none; } }
 @media (max-width: 380px) { .cabecalho__logo { width: 140px; } .cabecalho__acoes { gap: 6px; } }
 
 .modal-entrar {
