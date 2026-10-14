@@ -76,7 +76,7 @@ assets/js/admin.js         Lógica do painel (Supabase real ou modo demonstraç�
 assets/js/sem-zoom.js      Trava zoom por pinça, toque duplo, Ctrl+roda e Ctrl+/−/0 (junto com o <meta viewport> user-scalable=no)
 assets/js/admin-demo.js    Gerador de dados fictícios pra apresentar o painel antes de ligar o banco
 supabase/schema.sql        Tabelas + RLS (site só insere; painel logado lê)
-assets/js/animacoes.js     GSAP + ScrollTrigger: preloader, hero, barra-mangueira, títulos, contadores, tilt, etc.
+assets/js/animacoes.js     GSAP + ScrollTrigger: hero (o splash é CSS puro), barra-mangueira, títulos, contadores, tilt, etc.
 assets/js/supabase-init.js Inicializa Supabase se config preenchida (senão, só WhatsApp)
 assets/js/analytics.js     Páginas vistas, cliques e pesquisas, ligados ao WhatsApp do cliente (só com Supabase ativo)
 
@@ -92,7 +92,7 @@ netlify.toml               Pronto pra migração futura pro Netlify
 
 | Efeito | Função | Onde aparece |
 |---|---|---|
-| Preloader: X de mangueiras se desenha (1x por sessão) | `rodarPreloader()` | só `index.html` (`[data-preloader]`) |
+| Splash: X de mangueiras se desenha + cortina abre (1x por sessão) | CSS `.splash*` em `style.css` + script inline logo após o markup `[data-preloader]` (tempos `MIN`/`MAX` ali) | só `index.html` |
 | Entrada da hero, X gigante com fluido correndo, parallax | `animarHero()` | `.hero`, `.hero__x` |
 | Barra de progresso = mangueira com terminal de latão | `iniciarProgresso()` | topo de todas as páginas |
 | Títulos montando letra a letra | `montarTitulos("[data-montar]")` | todo `h2` com `data-montar` |
@@ -104,7 +104,7 @@ netlify.toml               Pronto pra migração futura pro Netlify
 | "+1" voando até a lista | `SanAnimacoes.voarParaLista()` | ao adicionar item |
 | Faixa dourada arrastável com inércia | `iniciarFaixaArrastavel()` | `main.js` (não depende do GSAP) |
 
-Tudo desliga com `prefers-reduced-motion`. Se o GSAP não carregar, o conteúdo aparece normal (sem animação) e o preloader some sozinho em ~3s (trava de segurança no CSS).
+Tudo desliga com `prefers-reduced-motion`. Se o GSAP não carregar, o conteúdo aparece normal (sem animação) e o splash some sozinho (trava no script inline em ~3,8s e, se até o JS morrer, trava de segurança no CSS em 5s).
 
 ## 5. Imagens e ilustrações (assets/img)
 
@@ -139,3 +139,11 @@ O logo é um SVG inline (texto + X de mangueiras com terminais de latão), redes
 - Telas < 360px: cabeçalho e margens encolhem (bloco `max-width: 359px` no fim do `style.css`).
 
 - **`[hidden]` sempre esconde** (regra global no topo do `style.css`). Sem ela, o modal invisível "Entrar com WhatsApp" cobria a página e bloqueava toques.
+
+## 4.1 Desempenho (regras para não voltar a travar)
+- **Splash em CSS puro**: começa no 1º quadro, não depende de GSAP. Os scripts (GSAP, `main.js`…) são injetados por um mini-loader no fim do `<body>` **depois** da animação de entrada (≈1s na 1ª visita; imediato nas demais) e disparam um `DOMContentLoaded` sintético ao terminar. Scripts novos entram na lista `L` do loader (em `partes.py` do gerador), não como `<script src>`.
+- **Supabase SDK sob demanda**: `supabase-init.js` baixa o SDK só depois do `load` + ociosidade; `SanSupabase.client.from(t).insert(x)` espera sozinho. Só `insert` é suportado ali (o painel admin usa o SDK direto).
+- **Fontes não bloqueiam** (`preload` + `onload`), `font-display: swap`.
+- **Camadas**: `.hero__foto` tem `will-change: transform` (rasteriza 1x). Evitar animar `scale`/`filter` em camada sem promoção, evitar `will-change` em muitos elementos.
+- **Toque / <1024px** (`leve` em `animacoes.js` + bloco final de `style.css`): sem parallax, sem tilt, títulos animam por palavra (não por letra), sem `backdrop-filter` nem `drop-shadow` em SVG.
+- Títulos só são quebrados em letras quando chegam perto da tela; loops infinitos da hero pausam fora da tela.

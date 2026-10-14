@@ -5,7 +5,7 @@
  * revelação em grupo, refresh depois de imagens/fontes).
  *
  * Momento-assinatura: o "X de mangueiras" do logotipo — se desenha no
- * preloader, se monta na hero com fluido correndo por dentro, vira a
+ * splash (CSS puro, no index.html), se monta na hero com fluido correndo por dentro, vira a
  * barra de progresso no topo (mangueira com terminal de latão) e o
  * sublinhado dos títulos.
  *
@@ -18,9 +18,25 @@
   var reduz = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var ponteiroFino = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 
+  var raiz = document.documentElement;
+  // Toque / tela pequena: sem parallax, sem inclinação e títulos por palavra
+  // (muito menos nós animados = rolagem a 60fps em celular fraco).
+  var leve = !ponteiroFino || window.innerWidth < 1024;
+
   function esconderPreloader() {
     var p = document.querySelector("[data-preloader]");
     if (p) p.hidden = true;
+    raiz.classList.add("hero-ok");
+  }
+
+  /** Roda fn quando o splash começa a abrir (ou já, se não há splash). */
+  function aoSplash(fn, atraso) {
+    var splash = document.querySelector("[data-preloader]");
+    if (!splash || splash.hidden || raiz.classList.contains("sem-preloader") || window.__sanSplashSai) {
+      fn();
+      return;
+    }
+    document.addEventListener("san:splash-sai", function () { gsap.delayedCall(atraso || 0, fn); }, { once: true });
   }
 
   // API usada por main.js / lista-orcamento.js mesmo sem GSAP
@@ -35,11 +51,13 @@
   }
 
   gsap.registerPlugin(ScrollTrigger);
+  // Barra de endereço do celular mudando de tamanho não pode recalcular tudo
+  ScrollTrigger.config({ ignoreMobileResize: true, limitCallbacks: true });
 
   /* ---------- Utilidades ---------- */
 
   /** Quebra o título em letras (acessível via aria-label). Base Remop. */
-  function dividirEmLetras(elemento) {
+  function dividirEmLetras(elemento, porPalavra) {
     if (elemento.querySelector(".letra-montavel")) return elemento.querySelectorAll(".letra-montavel");
     var html = elemento.innerHTML;
     var textoOriginal = elemento.textContent.trim().replace(/\s+/g, " ");
@@ -60,6 +78,12 @@
             var palavra = document.createElement("span");
             palavra.className = "palavra-montavel";
             palavra.setAttribute("aria-hidden", "true");
+            if (porPalavra) {
+              palavra.classList.add("letra-montavel");
+              palavra.textContent = parte;
+              destino.appendChild(palavra);
+              return;
+            }
             parte.split("").forEach(function (letra) {
               var s = document.createElement("span");
               s.className = "letra-montavel";
@@ -78,21 +102,22 @@
     }
     processar(fragmento, elemento);
     // .destaque usa background-clip:text — precisa estar nas letras também
-    elemento.querySelectorAll(".destaque .letra-montavel").forEach(function (l) { l.classList.add("destaque"); });
+    elemento.querySelectorAll(".destaque .letra-montavel, .destaque.letra-montavel").forEach(function (l) { l.classList.add("destaque"); });
     return elemento.querySelectorAll(".letra-montavel");
   }
 
+  /** Títulos: só quebra em letras/palavras quando chega perto da tela. */
   function montarTitulos(seletor) {
     gsap.utils.toArray(seletor).forEach(function (titulo) {
-      var letras = dividirEmLetras(titulo);
-      gsap.from(letras, {
-        yPercent: 110,
-        rotate: 8,
-        opacity: 0,
-        duration: 0.7,
-        ease: "power3.out",
-        stagger: 0.018,
-        scrollTrigger: { trigger: titulo, start: "top 90%", once: true },
+      ScrollTrigger.create({
+        trigger: titulo, start: "top 92%", once: true,
+        onEnter: function () {
+          var pecas = dividirEmLetras(titulo, leve);
+          gsap.from(pecas, {
+            yPercent: 110, rotate: leve ? 0 : 8, opacity: 0,
+            duration: 0.7, ease: "power3.out", stagger: leve ? 0.06 : 0.018,
+          });
+        },
       });
     });
   }
@@ -124,46 +149,19 @@
     return comprimento;
   }
 
-  /* ---------- Preloader ---------- */
-  function rodarPreloader() {
-    var preloader = document.querySelector("[data-preloader]");
-    var jaViu = false;
-    try { jaViu = sessionStorage.getItem("sanPreloader") === "1"; } catch (e) {}
-    if (!preloader || preloader.hidden || jaViu) {
-      esconderPreloader();
-      return gsap.timeline();
-    }
-    try { sessionStorage.setItem("sanPreloader", "1"); } catch (e) {}
-    document.body.classList.add("travado");
-
-    var tl = gsap.timeline({
-      onComplete: function () {
-        preloader.hidden = true;
-        document.body.classList.remove("travado");
-      },
-    });
-    var mangueiras = preloader.querySelectorAll(".logo-san__mangueira");
-    mangueiras.forEach(prepararTraco);
-    tl.to(mangueiras, { strokeDashoffset: 0, duration: 0.7, ease: "power2.inOut", stagger: 0.12 })
-      .from(preloader.querySelectorAll(".logo-san__terminal-grupo"), { scale: 0, transformOrigin: "50% 50%", duration: 0.35, ease: "back.out(3)", stagger: 0.05 }, "-=0.25")
-      .from(preloader.querySelectorAll(".logo-san__texto"), { opacity: 0, y: 10, duration: 0.4, stagger: 0.06 }, "-=0.3")
-      .to(preloader.querySelector(".preloader__barra span"), { width: "100%", duration: 0.5, ease: "power1.inOut" }, "-=0.2")
-      .to(preloader, { yPercent: -100, duration: 0.7, ease: "power4.inOut" }, "+=0.05");
-    return tl;
-  }
-
   /* ---------- Hero ---------- */
-  function animarHero(atraso) {
+  function animarHero() {
     var hero = document.querySelector(".hero");
     if (!hero) return;
     var titulo = hero.querySelector("h1");
     var letras = titulo ? dividirEmLetras(titulo) : [];
 
-    var tl = gsap.timeline({ delay: atraso, defaults: { ease: "power3.out" } });
+    var tl = gsap.timeline({ paused: true, defaults: { ease: "power3.out" } });
+    aoSplash(function () { tl.play(); }, 0.3);
     function de(alvos, vars, posicao) {
       if (alvos && alvos.length !== 0) tl.from(alvos, vars, posicao);
     }
-    de(hero.querySelectorAll(".hero__foto"), { scale: 1.18, duration: 1.8, ease: "power2.out" }, 0);
+    de(hero.querySelectorAll(".hero__foto"), { opacity: 0, duration: 1.1, ease: "power1.out" }, 0);
     de(hero.querySelectorAll(".rotulo, .status-aberto"), { opacity: 0, y: 14, duration: 0.5, stagger: 0.08 }, 0.1);
     de(letras, { yPercent: 120, rotate: 10, opacity: 0, duration: 0.8, stagger: 0.014 }, 0.2);
     de(hero.querySelectorAll(".hero__texto"), { opacity: 0, y: 18, duration: 0.6 }, "-=0.5");
@@ -180,10 +178,16 @@
         .from(x.querySelectorAll(".x-fluxo"), { opacity: 0, duration: 0.6 }, "-=0.2")
         .from(x.querySelectorAll(".hero__etiqueta"), { opacity: 0, scale: 0.8, y: 10, duration: 0.5, ease: "back.out(2)", stagger: 0.12 }, "-=0.4");
 
-      // Fluido correndo por dentro das mangueiras (loop)
-      gsap.to(x.querySelectorAll(".x-fluxo"), { strokeDashoffset: -280, duration: 4, ease: "none", repeat: -1 });
-      // Flutuação leve
-      gsap.to(x.querySelector("svg"), { y: -10, duration: 3, ease: "sine.inOut", yoyo: true, repeat: -1 });
+      // Fluido correndo por dentro das mangueiras + flutuação leve (loops).
+      // Só rodam enquanto a hero está na tela.
+      var loops = [
+        gsap.to(x.querySelectorAll(".x-fluxo"), { strokeDashoffset: -280, duration: 4, ease: "none", repeat: -1, paused: true }),
+        gsap.to(x.querySelector("svg"), { y: -10, duration: 3, ease: "sine.inOut", yoyo: true, repeat: -1, paused: true }),
+      ];
+      ScrollTrigger.create({
+        trigger: hero, start: "top bottom", end: "bottom top",
+        onToggle: function (self) { loops.forEach(function (l) { self.isActive ? l.resume() : l.pause(); }); },
+      });
 
       if (ponteiroFino) {
         var svg = x.querySelector("svg");
@@ -198,15 +202,20 @@
       }
     }
 
-    // Parallax ao rolar: fundo afunda, conteúdo sobe
-    gsap.fromTo(hero.querySelector(".hero__foto"), { yPercent: 0 }, {
-      yPercent: 10, ease: "none", immediateRender: false,
-      scrollTrigger: { trigger: hero, start: "top top", end: "bottom top", scrub: 0.5 },
-    });
-    gsap.to(hero.querySelector(".hero__grid, .hero__conteudo"), {
-      y: -60, opacity: 0.2, ease: "none",
-      scrollTrigger: { trigger: hero, start: "top top", end: "bottom top", scrub: 0.5 },
-    });
+    // Libera o conteúdo (o CSS escondia só até o GSAP assumir o estado inicial)
+    raiz.classList.add("hero-ok");
+
+    // Parallax ao rolar: fundo afunda, conteúdo sobe (só desktop com mouse)
+    if (!leve) {
+      gsap.fromTo(hero.querySelector(".hero__foto"), { yPercent: 0 }, {
+        yPercent: 10, ease: "none", immediateRender: false,
+        scrollTrigger: { trigger: hero, start: "top top", end: "bottom top", scrub: true },
+      });
+      gsap.to(hero.querySelector(".hero__grid, .hero__conteudo"), {
+        y: -60, opacity: 0.2, ease: "none",
+        scrollTrigger: { trigger: hero, start: "top top", end: "bottom top", scrub: true },
+      });
+    }
   }
 
   /* ---------- Barra de progresso (mangueira no topo) ---------- */
@@ -348,9 +357,7 @@
 
   /* ---------- Montagem ---------- */
   document.addEventListener("DOMContentLoaded", function () {
-    var preloaderTl = rodarPreloader();
-    var atrasoHero = Math.max(preloaderTl.duration() - 0.45, 0);
-    animarHero(atrasoHero);
+    animarHero();
 
     iniciarProgresso();
     iniciarSublinhados();
@@ -374,10 +381,13 @@
 
     // Faixa dourada entra "esticando"
     var faixa = document.querySelector(".faixa");
-    if (faixa) gsap.from(faixa, { scaleX: 0.6, opacity: 0, duration: 1, ease: "power3.out", delay: atrasoHero + 0.6 });
+    if (faixa) {
+      gsap.set(faixa, { scaleX: 0.6, opacity: 0 });
+      aoSplash(function () { gsap.to(faixa, { scaleX: 1, opacity: 1, duration: 1, ease: "power3.out", delay: 0.6, clearProps: "transform,opacity" }); }, 0.3);
+    }
 
-    // Mosaico: fotos com parallax interno
-    gsap.utils.toArray(".mosaico img, .foto-moldura img").forEach(function (img) {
+    // Mosaico: fotos com parallax interno (só desktop)
+    if (!leve) gsap.utils.toArray(".mosaico img, .foto-moldura img").forEach(function (img) {
       gsap.fromTo(img, { yPercent: -6, scale: 1.12 }, {
         yPercent: 6, ease: "none",
         scrollTrigger: { trigger: img.parentElement, start: "top bottom", end: "bottom top", scrub: true },
@@ -404,12 +414,15 @@
     }
 
     // Botões flutuantes entram depois da hero
-    gsap.fromTo(".flutuante", { scale: 0 }, { scale: 1, duration: 0.6, ease: "back.out(2.4)", stagger: 0.1, delay: atrasoHero + 1.4, clearProps: "transform,scale" });
+    gsap.set(".flutuante", { scale: 0 });
+    aoSplash(function () { gsap.to(".flutuante", { scale: 1, duration: 0.6, ease: "back.out(2.4)", stagger: 0.1, delay: 1.4, clearProps: "transform,scale" }); }, 0.3);
 
     // Imagens e fontes mudam a altura da página depois do cálculo inicial
     // — sem isso, gatilhos ficam desalinhados e elementos podem não aparecer
     // (mesmo bug já resolvido na Remop).
-    window.addEventListener("load", function () { ScrollTrigger.refresh(); });
+    // Os scripts entram depois do "load" (mini-loader do HTML): se já passou, refaz agora.
+    if (document.readyState === "complete") ScrollTrigger.refresh();
+    else window.addEventListener("load", function () { ScrollTrigger.refresh(); });
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { ScrollTrigger.refresh(); });
   });
 })();
