@@ -227,8 +227,9 @@
       start: 0,
       end: "max",
       onUpdate: function (self) {
-        gsap.set(linha, { scaleX: self.progress });
-        if (terminal) gsap.set(terminal, { x: self.progress * window.innerWidth - 18 });
+        // direto no estilo (mais barato que gsap.set a cada evento de rolagem)
+        linha.style.transform = "scaleX(" + self.progress + ")";
+        if (terminal) terminal.style.transform = "translate3d(" + (self.progress * window.innerWidth - 18) + "px,0,0)";
       },
     });
   }
@@ -271,7 +272,7 @@
     if (linha) {
       gsap.fromTo(linha, { scaleY: 0 }, {
         scaleY: 1, ease: "none",
-        scrollTrigger: { trigger: lista, start: "top 75%", end: "bottom 55%", scrub: 0.4 },
+        scrollTrigger: { trigger: lista, start: "top 75%", end: "bottom 55%", scrub: true },
       });
     }
     lista.querySelectorAll(".passo").forEach(function (passo) {
@@ -403,13 +404,13 @@
 
     // X gigante do CTA final gira devagar com o scroll
     var xCta = document.querySelector(".cta-final__x");
-    if (xCta) {
+    if (xCta && !leve) {
       gsap.fromTo(xCta, { rotate: -20 }, { rotate: 25, ease: "none", scrollTrigger: { trigger: ".cta-final", start: "top bottom", end: "bottom top", scrub: true } });
     }
 
     // Nome gigante no rodapé desliza conforme chega no fim
     var gigante = document.querySelector(".rodape__gigante");
-    if (gigante) {
+    if (gigante && !leve) {
       gsap.fromTo(gigante, { xPercent: 12 }, { xPercent: -12, ease: "none", scrollTrigger: { trigger: ".rodape", start: "top bottom", end: "bottom bottom", scrub: true } });
     }
 

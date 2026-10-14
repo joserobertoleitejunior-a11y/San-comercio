@@ -1,43 +1,36 @@
 /**
- * Trava o zoom por gesto e por roda do mouse (pedido do cliente: o site
- * deve ocupar a tela sem ser ampliado/reduzido). Complementa o
- * <meta name="viewport" ... user-scalable=no> das páginas, que o iOS
- * ignora e o Chrome ignora no "modo desktop".
+ * Trava o zoom (pedido do cliente: o site deve ocupar a tela sem ser
+ * ampliado/reduzido). Complementa o <meta name="viewport" ...
+ * user-scalable=no> das páginas, que o iOS ignora e o Chrome ignora no
+ * "modo desktop".
  *
- * Observação de acessibilidade: bloquear zoom dificulta a leitura para
- * quem tem baixa visão. Por isso o texto do site usa tamanhos generosos
- * e respeita o tamanho de fonte escolhido no sistema.
- * Os atalhos do navegador (Ctrl +/−) não dá pra bloquear com segurança.
+ * DESEMPENHO: a pinça e o toque duplo são travados por CSS
+ * (`touch-action: pan-x pan-y`, em style.css). NÃO registrar aqui
+ * listeners não-passivos de touchmove/touchend/wheel permanentes: eles
+ * obrigam o navegador a esperar o JS a cada pixel de rolagem e deixam a
+ * página travando no celular e no touchpad.
+ *
+ * Acessibilidade: bloquear zoom dificulta a leitura para quem tem baixa
+ * visão; por isso o texto usa tamanhos generosos e respeita a fonte do
+ * sistema.
  */
 (function () {
   "use strict";
   var opcoes = { passive: false };
 
-  // Pinça no iOS Safari
+  // Pinça no iOS Safari (evento raro: só dispara em pinça)
   ["gesturestart", "gesturechange", "gestureend"].forEach(function (nome) {
     document.addEventListener(nome, function (e) { e.preventDefault(); }, opcoes);
   });
 
-  // Pinça com dois dedos (Android/Chrome)
-  document.addEventListener("touchmove", function (e) {
-    if (e.touches && e.touches.length > 1) e.preventDefault();
-  }, opcoes);
-
-  // Toque duplo rápido (zoom por duplo toque)
-  var ultimoToque = 0;
-  document.addEventListener("touchend", function (e) {
-    var agora = Date.now();
-    if (agora - ultimoToque < 320 && e.target && !e.target.closest("input, textarea, select")) e.preventDefault();
-    ultimoToque = agora;
-  }, opcoes);
-
-  // Ctrl + roda do mouse / pinça no touchpad
-  document.addEventListener("wheel", function (e) {
-    if (e.ctrlKey) e.preventDefault();
-  }, opcoes);
-
-  // Ctrl/⌘ + "+", "−", "0"
+  // Ctrl + roda / pinça no touchpad: o listener (não-passivo) só existe
+  // enquanto o Ctrl/⌘ está pressionado, então a rolagem normal não é afetada.
+  function bloquearRoda(e) { e.preventDefault(); }
   document.addEventListener("keydown", function (e) {
+    if (e.key === "Control" || e.key === "Meta") window.addEventListener("wheel", bloquearRoda, opcoes);
     if ((e.ctrlKey || e.metaKey) && ["+", "-", "=", "_", "0"].indexOf(e.key) !== -1) e.preventDefault();
   });
+  function soltar() { window.removeEventListener("wheel", bloquearRoda, opcoes); }
+  document.addEventListener("keyup", function (e) { if (e.key === "Control" || e.key === "Meta") soltar(); });
+  window.addEventListener("blur", soltar);
 })();

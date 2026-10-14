@@ -59,30 +59,14 @@
 </script>
 </head>
 <body>
-<!-- Splash: X de mangueiras se desenha em CSS puro (1x por sessão). Controle de saída = script inline logo abaixo. -->
+<!-- Splash: o X de mangueiras do logo se desenha (CSS puro, 1x por sessão). Saída = script inline logo abaixo. -->
 <div class="splash" data-preloader aria-hidden="true">
-  <div class="splash__painel splash__painel--a"></div>
-  <div class="splash__painel splash__painel--b"></div>
-  <div class="splash__brilho"></div>
-  <div class="splash__centro">
-    <svg class="splash__x" viewBox="0 0 120 120" aria-hidden="true">
-      <path class="splash__tubo" pathLength="1" d="M18 24C54 24 66 96 102 96"/>
-      <path class="splash__tubo splash__tubo--b" pathLength="1" d="M18 96C54 96 66 24 102 24"/>
-      <path class="splash__luz" pathLength="1" d="M18 22C54 22 66 94 102 94"/>
-      <path class="splash__luz splash__luz--b" pathLength="1" d="M18 94C54 94 66 22 102 22"/>
-      <path class="splash__fluxo" pathLength="1" d="M18 24C54 24 66 96 102 96"/>
-      <path class="splash__fluxo splash__fluxo--b" pathLength="1" d="M18 96C54 96 66 24 102 24"/>
-      <rect class="splash__term splash__term--1" x="6" y="18" width="16" height="12" rx="2.5"/>
-      <rect class="splash__term splash__term--2" x="6" y="90" width="16" height="12" rx="2.5"/>
-      <rect class="splash__term splash__term--3" x="98" y="18" width="16" height="12" rx="2.5"/>
-      <rect class="splash__term splash__term--4" x="98" y="90" width="16" height="12" rx="2.5"/>
-    </svg>
-    <div class="splash__marca"><span class="splash__linha splash__linha--1"><span>San</span></span><span class="splash__linha splash__linha--2"><span>Comércio</span></span></div>
-    <div class="splash__sub">Mangueiras · Conexões</div>
-    <div class="splash__barra"><i></i></div>
+  <div>
+    <div class="preloader__logo"><svg class="logo-san" viewBox="0 0 360 112" aria-hidden="true"><text class="logo-san__texto" x="180" y="40" text-anchor="middle" font-size="42" font-weight="900" letter-spacing="0.5">SAN COMÉRCIO</text><text class="logo-san__texto" x="180" y="65" text-anchor="middle" font-size="10" font-weight="800">DE</text><text class="logo-san__texto" x="139" y="88" text-anchor="end" font-size="15" font-weight="800">MANGUEIRAS</text><text class="logo-san__texto" x="221" y="88" font-size="15" font-weight="800">CONEXÕES</text><text class="logo-san__texto" x="180" y="110" text-anchor="middle" font-size="10" font-weight="800">E</text><path class="logo-san__mangueira" pathLength="1" d="M156 70 C 176 70, 184 96, 204 96"/><path class="logo-san__mangueira" pathLength="1" d="M156 96 C 176 96, 184 70, 204 70"/><g class="logo-san__terminal-grupo"><rect class="logo-san__terminal" x="142" y="65.5" width="14" height="9" rx="1.5"/><path class="logo-san__frisos" d="M146 65.5v9M149 65.5v9M152 65.5v9"/></g><g class="logo-san__terminal-grupo"><rect class="logo-san__terminal" x="142" y="91.5" width="14" height="9" rx="1.5"/><path class="logo-san__frisos" d="M146 91.5v9M149 91.5v9M152 91.5v9"/></g><g class="logo-san__terminal-grupo"><rect class="logo-san__terminal" x="204" y="65.5" width="14" height="9" rx="1.5"/><path class="logo-san__frisos" d="M208 65.5v9M211 65.5v9M214 65.5v9"/></g><g class="logo-san__terminal-grupo"><rect class="logo-san__terminal" x="204" y="91.5" width="14" height="9" rx="1.5"/><path class="logo-san__frisos" d="M208 91.5v9M211 91.5v9M214 91.5v9"/></g></svg></div>
+    <div class="preloader__barra"><span></span></div>
   </div>
 </div>
-<script>(function(){var s=document.querySelector("[data-preloader]"),d=document.documentElement;if(!s||d.classList.contains("sem-preloader"))return;try{sessionStorage.setItem("sanPreloader","1")}catch(e){}document.body.classList.add("travado");var t0=performance.now(),fontes=false,fim=false,MIN=1700,MAX=3800;function sair(){if(fim)return;fim=true;s.classList.add("splash--pronto");setTimeout(function(){s.classList.add("splash--sai");window.__sanSplashSai=true;document.dispatchEvent(new Event("san:splash-sai"));setTimeout(function(){s.hidden=true;document.body.classList.remove("travado");document.dispatchEvent(new Event("san:splash-fim"))},1150)},230)}function tentar(){if(fim)return;var dt=performance.now()-t0;if(dt>=MAX||(dt>=MIN&&window.__sanProntos&&fontes))sair()}window.__sanTentar=tentar;if(document.fonts&&document.fonts.ready)document.fonts.ready.then(function(){fontes=true;tentar()});else fontes=true;setTimeout(tentar,MIN);setTimeout(tentar,MAX)})();</script>
+<script>(function(){var s=document.querySelector("[data-preloader]"),d=document.documentElement;if(!s||d.classList.contains("sem-preloader"))return;try{sessionStorage.setItem("sanPreloader","1")}catch(e){}document.body.classList.add("travado");var t0=performance.now(),fontes=false,fim=false,MIN=1700,MAX=3800;function sair(){if(fim)return;fim=true;s.classList.add("splash--pronto");setTimeout(function(){s.classList.add("splash--sai");window.__sanSplashSai=true;document.dispatchEvent(new Event("san:splash-sai"));setTimeout(function(){s.hidden=true;document.body.classList.remove("travado");document.dispatchEvent(new Event("san:splash-fim"))},800)},230)}function tentar(){if(fim)return;var dt=performance.now()-t0;if(dt>=MAX||(dt>=MIN&&window.__sanProntos&&fontes))sair()}window.__sanTentar=tentar;if(document.fonts&&document.fonts.ready)document.fonts.ready.then(function(){fontes=true;tentar()});else fontes=true;setTimeout(tentar,MIN);setTimeout(tentar,MAX)})();</script>
 <a class="skip-link" href="#conteudo-principal">Pular para o conteúdo</a>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
   <defs>
