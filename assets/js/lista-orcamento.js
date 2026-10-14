@@ -186,12 +186,13 @@
     return linhas.join("\n");
   }
 
-  async function salvarNoSupabase(nome, cidade) {
+  async function salvarNoSupabase(nome, cidade, whatsapp) {
     var info = window.SanSupabase;
     if (!info || !info.pronto) return;
     try {
       var resultado = await info.client.from("orcamentos").insert({
         nome: nome || "",
+        whatsapp: String(whatsapp || "").replace(/\D/g, ""),
         cidade: cidade || "",
         itens: itens,
         pagina: location.pathname,
@@ -209,8 +210,15 @@
       evento.preventDefault();
       if (!itens.length) return;
       var nome = form.querySelector("#lista-nome").value.trim();
+      var whatsapp = form.querySelector("#lista-whatsapp").value.trim();
       var cidade = form.querySelector("#lista-cidade").value.trim();
-      salvarNoSupabase(nome, cidade);
+      var status = form.querySelector("[data-lista-status]");
+      var cliente = window.SanCliente;
+      if (!nome) { status.textContent = "Escreva seu nome pra equipe saber com quem fala."; form.querySelector("#lista-nome").focus(); return; }
+      if (cliente && !cliente.whatsappValido(whatsapp)) { status.textContent = "Confira seu WhatsApp com DDD, ex.: (15) 99999-9999."; form.querySelector("#lista-whatsapp").focus(); return; }
+      status.textContent = "";
+      if (cliente) cliente.salvar({ nome: nome, whatsapp: whatsapp, cidade: cidade }, "lista");
+      salvarNoSupabase(nome, cidade, whatsapp);
       var link = window.SanWhatsApp.montarLink(montarMensagem(nome, cidade));
       // Navegação por link real (funciona em qualquer navegador e app).
       var a = form.querySelector("[data-link-envio]");
@@ -270,6 +278,7 @@
         var texto = campo.value.trim();
         if (!texto) { campo.focus(); return; }
         adicionar(texto, "", 1, form.querySelector("button"));
+        if (window.SanAnalytics) window.SanAnalytics.registrarPesquisa(texto, 0, "item-livre");
         campo.value = "";
       });
     });

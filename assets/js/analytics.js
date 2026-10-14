@@ -25,6 +25,13 @@
     }
   }
 
+  // Número do cliente identificado ("Entrar com WhatsApp"), só dígitos.
+  // Liga as visitas/cliques/pesquisas ao cliente no painel admin.
+  function clienteWhatsapp() {
+    var c = window.SanCliente && window.SanCliente.obter();
+    return c && c.whatsapp ? String(c.whatsapp).replace(/\D/g, "") : "";
+  }
+
   async function registrar(tabela, dados) {
     var supabaseInfo = window.SanSupabase;
     if (!supabaseInfo || !supabaseInfo.pronto) return;
@@ -34,6 +41,7 @@
         {
           pagina: location.pathname,
           visitante_id: obterVisitanteId(),
+          cliente_whatsapp: clienteWhatsapp(),
         },
         dados
       );
@@ -76,8 +84,12 @@
   }
 
   window.SanAnalytics = {
-    registrarPergunta: function (texto) {
-      registrar("perguntas_ia", { texto: String(texto || "").slice(0, 500) });
+    visitanteId: obterVisitanteId,
+    /** Termo buscado no catálogo / item escrito à mão na lista. */
+    registrarPesquisa: function (termo, resultados, origem) {
+      termo = String(termo || "").trim().toLowerCase().slice(0, 120);
+      if (termo.length < 2) return;
+      registrar("pesquisas", { termo: termo, resultados: resultados || 0, origem: origem || "busca" });
     },
   };
 

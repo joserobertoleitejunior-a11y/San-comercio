@@ -28,50 +28,24 @@ Ao trocar para domínio próprio, atualizar `canonical`, `og:*`, JSON-LD nas 3 p
 Funciona 100% sem backend: guarda a lista no navegador (localStorage) e envia pro
 WhatsApp formatada. Nunca mostra preço nem confirma estoque — o atendente humano fecha.
 
-## Supabase (opcional — quando quiser guardar orçamentos e métricas)
+## Supabase (banco do painel admin) — JÁ LIGADO
 
-1. Criar projeto em supabase.com e preencher `supabase.url`/`anonKey` em `assets/js/config.js`
-   (a anon key não é segredo; a proteção é o RLS abaixo).
-2. Rodar no SQL Editor:
+Projeto **San Comercio** (região sa-east-1, plano gratuito), ref `urxtnzdqeafmkmilmcpq`.
+URL e anon key já estão em `assets/js/config.js` (a anon key não é segredo; a proteção é o RLS).
 
-```sql
-create table orcamentos (
-  id bigint generated always as identity primary key,
-  nome text default '',
-  cidade text default '',
-  itens jsonb not null default '[]',
-  pagina text default '',
-  status text default 'novo',
-  criado_em timestamptz not null default now()
-);
-create table paginas_vistas (
-  id bigint generated always as identity primary key,
-  pagina text default '', referencia text default '', visitante_id text default '',
-  criado_em timestamptz not null default now()
-);
-create table cliques (
-  id bigint generated always as identity primary key,
-  tipo text default '', detalhe text default '', pagina text default '', visitante_id text default '',
-  criado_em timestamptz not null default now()
-);
+- Tabelas e políticas: `supabase/schema.sql` (o site só **insere**; só o painel logado **lê**).
+- Login do painel: e-mail interno `painel@san-comercio.internal` + PIN
+  (a senha real é PIN + sufixo de `assets/js/admin.js`). PIN provisório definido pelo José: **5786**.
+  **Trocar antes de divulgar o painel:** um PIN de 4 dígitos é fraco (o sufixo é público).
+  Para trocar: Supabase → Authentication → Users → reset password (use PIN de 8 dígitos).
+- Enquanto não há dados reais, `admin.html` → "Ver demonstração" mostra o painel com dados de exemplo.
 
-alter table orcamentos enable row level security;
-alter table paginas_vistas enable row level security;
-alter table cliques enable row level security;
-
-create policy "criacao publica" on orcamentos for insert to anon with check (true);
-create policy "leitura autenticada" on orcamentos for select to authenticated using (true);
-create policy "criacao publica" on paginas_vistas for insert to anon with check (true);
-create policy "leitura autenticada" on paginas_vistas for select to authenticated using (true);
-create policy "criacao publica" on cliques for insert to anon with check (true);
-create policy "leitura autenticada" on cliques for select to authenticated using (true);
-```
-
-Nunca liberar leitura pública dessas tabelas (são leads do cliente).
+Nunca liberar leitura pública dessas tabelas (são dados de clientes — LGPD).
+Pendente de segurança: ativar "Leaked password protection" em Authentication → Providers → Email
+(exige plano Pro).
 
 ## Backlog
 
 - Personagem/mascote da San Comércio (assistente + tour, nos moldes do "Seu Remo")
-- Painel administrativo (reaproveitar `admin.html` da Remop)
 - Fotos reais em alta dos produtos e da prensa
 - Ver pendências em `BRIEFING-SAN.md`

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Painel San Comércio</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,600..900&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css?v=20261014a">
+<link rel="stylesheet" href="assets/css/admin.css?v=20261014a">
+</head>
+<body class="admin-body">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <linearGradient id="latao-grad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F8DD94"/><stop offset=".55" stop-color="#E2AA33"/><stop offset="1" stop-color="#A87412"/></linearGradient>
+    <linearGradient id="latao-grad-hero" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FBE6A8"/><stop offset=".5" stop-color="#E2AA33"/><stop offset="1" stop-color="#9C6A0E"/></linearGradient>
+    <linearGradient id="latao-grad-fluxo" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FBE6A8"/><stop offset=".5" stop-color="#E2AA33"/><stop offset="1" stop-color="#9C6A0E"/></linearGradient>
+    <linearGradient id="g-prata" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset=".5" stop-color="#C9D0DE"/><stop offset="1" stop-color="#8A94AB"/></linearGradient>
+    <linearGradient id="g-azul" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7FA6FF"/><stop offset=".5" stop-color="#2A4BC9"/><stop offset="1" stop-color="#142A86"/></linearGradient>
+    <linearGradient id="g-preto" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#58606F"/><stop offset="1" stop-color="#1B1E29"/></linearGradient>
+    <linearGradient id="g-amarelo" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFE08A"/><stop offset=".55" stop-color="#F2C230"/><stop offset="1" stop-color="#B8860B"/></linearGradient>
+    <linearGradient id="g-vidro" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#D4EBFF"/><stop offset="1" stop-color="#4DA3FF"/></linearGradient>
+  </defs>
+</svg>
+
+<!-- ===================== LOGIN ===================== -->
+<div class="admin-login" data-admin-login>
+  <form class="admin-login__caixa" data-form-login novalidate>
+    <div class="admin-login__logo"><svg class="logo-san" viewBox="0 0 360 112" role="img" aria-label="San Comércio de Mangueiras e Conexões"><text class="logo-san__texto" x="180" y="40" text-anchor="middle" font-size="42" font-weight="900" letter-spacing="0.5">SAN COMÉRCIO</text><text class="logo-san__texto" x="180" y="65" text-anchor="middle" font-size="10" font-weight="800">DE</text><text class="logo-san__texto" x="139" y="88" text-anchor="end" font-size="15" font-weight="800">MANGUEIRAS</text><text class="logo-san__texto" x="221" y="88" font-size="15" font-weight="800">CONEXÕES</text><text class="logo-san__texto" x="180" y="110" text-anchor="middle" font-size="10" font-weight="800">E</text><path class="logo-san__mangueira" d="M156 70 C 176 70, 184 96, 204 96"/><path class="logo-san__mangueira" d="M156 96 C 176 96, 184 70, 204 70"/><g class="logo-san__terminal-grupo"><rect class="logo-san__terminal" x="142" y="65.5" width="14" height="9" rx="1.5"/><path class="logo-san__frisos" d="M146 65.5v9M149 65.5v9M152 65.5v9"/></g><g class="logo-san__terminal-grupo"><rect class="logo-san__terminal" x="142" y="91.5" width="14" height="9" rx="1.5"/><path class="logo-san__frisos" d="M146 91.5v9M149 91.5v9M152 91.5v9"/></g><g class="logo-san__terminal-grupo"><rect class="logo-san__terminal" x="204" y="65.5" width="14" height="9" rx="1.5"/><path class="logo-san__frisos" d="M208 65.5v9M211 65.5v9M214 65.5v9"/></g><g class="logo-san__terminal-grupo"><rect class="logo-san__terminal" x="204" y="91.5" width="14" height="9" rx="1.5"/><path class="logo-san__frisos" d="M208 91.5v9M211 91.5v9M214 91.5v9"/></g></svg></div>
+    <h1>Painel da loja</h1>
+    <p>Acesso restrito à equipe San Comércio.</p>
+    <div class="campo">
+      <label for="login-pin">PIN de acesso</label>
+      <input id="login-pin" name="pin" class="admin-login__pin" type="password" inputmode="numeric" pattern="[0-9]*" minlength="4" maxlength="8" autocomplete="off" placeholder="••••">
+    </div>
+    <button class="botao botao--primario botao--bloco" type="submit" data-botao-entrar>Entrar</button>
+    <p class="admin-status" data-status-login role="alert"></p>
+    <div class="admin-login__demo" data-bloco-demo hidden>
+      <p data-texto-demo>Ainda sem clientes reais? Veja o painel com dados de exemplo:</p>
+      <button class="botao botao--azul botao--bloco" type="button" data-ver-demo>Ver demonstração</button>
+    </div>
+    <a class="admin-login__voltar" href="index.html">← Voltar ao site</a>
+  </form>
+</div>
+
+<!-- ===================== PAINEL ===================== -->
+<div class="admin-painel" data-admin-painel hidden>
+  <aside class="admin-lateral">
+    <a class="admin-lateral__logo" href="index.html" aria-label="Ir para o site"><svg class="logo-san" viewBox="0 0 360 112" role="img" aria-label="San Comércio de Mangueiras e Conexões"><text class="logo-san__texto" x="180" y="40" text-anchor="middle" font-size="42" font-weight="900" letter-spacing="0.5">SAN COMÉRCIO</text><text class="logo-san__texto" x="180" y="65" text-anchor="middle" font-size="10" font-weight="800">DE</text><text class="logo-san__texto" x="139" y="88" text-anchor="end" font-size="15" font-weight="800">MANGUEIRAS</text><text class="logo-san__texto" x="221" y="88" font-size="15" font-weight="800">CONEXÕES</text><text class="logo-san__texto" x="180" y="110" text-anchor="middle" font-size="10" font-weight="800">E</text><path class="logo-san__mangueira" d="M156 70 C 176 70, 184 96, 204 96"/><path class="logo-san__mangueira" d="M156 96 C 176 96, 184 70, 204 70"/><g class="logo-san__terminal-grupo"><rect class="logo-san__terminal" x="142" y="65.5" width="14" height="9" rx="1.5"/><path class="logo-san__frisos" d="M146 65.5v9M149 65.5v9M152 65.5v9"/></g><g class="logo-san__terminal-grupo"><rect class="logo-san__terminal" x="142" y="91.5" width="14" height="9" rx="1.5"/><path class="logo-san__frisos" d="M146 91.5v9M149 91.5v9M152 91.5v9"/></g><g class="logo-san__terminal-grupo"><rect class="logo-san__terminal" x="204" y="65.5" width="14" height="9" rx="1.5"/><path class="logo-san__frisos" d="M208 65.5v9M211 65.5v9M214 65.5v9"/></g><g class="logo-san__terminal-grupo"><rect class="logo-san__terminal" x="204" y="91.5" width="14" height="9" rx="1.5"/><path class="logo-san__frisos" d="M208 91.5v9M211 91.5v9M214 91.5v9"/></g></svg></a>
+    <div class="admin-lateral__rodape">
+      <a class="botao botao--claro botao--sm" href="index.html">Ver site</a>
+      <button class="botao botao--claro botao--sm" type="button" data-sair>Sair</button>
+    </div>
+    <nav class="admin-nav" aria-label="Seções do painel">
+      <a href="#visao" data-secao-link="visao"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 13h4v8H3zM10 8h4v13h-4zM17 3h4v18h-4z"/></svg><span>Visão geral</span></a>
+      <a href="#clientes" data-secao-link="clientes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 11a4 4 0 1 0-8 0M3 21c0-4 4-6 9-6s9 2 9 6"/></svg><span>Clientes</span></a>
+      <a href="#orcamentos" data-secao-link="orcamentos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4h6v2H9zM16 5h2a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h2M8 11h8M8 15h5"/></svg><span>Orçamentos</span></a>
+      <a href="#pesquisas" data-secao-link="pesquisas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM20 20l-4-4"/></svg><span>Pesquisas</span></a>
+      <a href="#trafego" data-secao-link="trafego"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg><span>Tráfego</span></a>
+    </nav>
+  </aside>
+
+  <div class="admin-principal">
+    <div class="admin-demo-aviso" data-aviso-demo hidden>
+      <strong>Modo demonstração</strong> · dados de exemplo para apresentação. Nenhum nome ou número aqui é de cliente real.
+    </div>
+
+    <header class="admin-barra">
+      <div>
+        <span class="rotulo" data-titulo-rotulo>Painel</span>
+        <h1 data-titulo-secao>Visão geral</h1>
+      </div>
+      <div class="admin-barra__acoes">
+        <label class="visually-hidden" for="admin-periodo">Período</label>
+        <select id="admin-periodo" data-periodo>
+          <option value="7">Últimos 7 dias</option>
+          <option value="30" selected>Últimos 30 dias</option>
+          <option value="90">Últimos 90 dias</option>
+        </select>
+        <button class="botao botao--outline botao--sm" type="button" data-atualizar>Atualizar</button>
+      </div>
+    </header>
+
+    <!-- ========== VISÃO GERAL ========== -->
+    <section class="admin-secao" data-secao="visao">
+      <div class="kpis" data-kpis></div>
+
+      <div class="admin-grade">
+        <div class="admin-cartao admin-cartao--largo">
+          <div class="admin-cartao__topo">
+            <h2>Visitas por dia</h2>
+            <label class="admin-check"><input type="checkbox" data-comparar checked> Comparar com o período anterior</label>
+          </div>
+          <div class="grafico"><canvas data-grafico="visitas" role="img" aria-label="Gráfico de visitas por dia"></canvas></div>
+        </div>
+
+        <div class="admin-cartao">
+          <div class="admin-cartao__topo"><h2>Do site ao orçamento</h2><span class="admin-dica">cada etapa e quanto sobrou da anterior</span></div>
+          <ol class="funil" data-funil></ol>
+        </div>
+
+        <div class="admin-cartao">
+          <div class="admin-cartao__topo"><h2>Orçamentos por dia</h2><span class="admin-dica">por situação</span></div>
+          <div class="grafico grafico--baixo"><canvas data-grafico="orcamentos" role="img" aria-label="Gráfico de orçamentos por dia e situação"></canvas></div>
+        </div>
+
+        <div class="admin-cartao">
+          <div class="admin-cartao__topo"><h2>Horário de pico</h2><span class="admin-dica">visitas por hora</span></div>
+          <div class="grafico grafico--baixo"><canvas data-grafico="horas" role="img" aria-label="Gráfico de visitas por hora do dia"></canvas></div>
+        </div>
+
+        <div class="admin-cartao">
+          <div class="admin-cartao__topo"><h2>Mais pedidos na lista</h2><span class="admin-dica">unidades</span></div>
+          <ol class="barras" data-top-produtos></ol>
+        </div>
+
+        <div class="admin-cartao">
+          <div class="admin-cartao__topo"><h2>Clientes que mais pedem</h2><span class="admin-dica">orçamentos no período</span></div>
+          <ol class="barras" data-top-clientes></ol>
+        </div>
+
+        <div class="admin-cartao">
+          <div class="admin-cartao__topo"><h2>Mais buscados</h2><a href="#pesquisas" data-secao-link="pesquisas" class="admin-link">ver tudo</a></div>
+          <ol class="barras" data-top-pesquisas></ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== CLIENTES ========== -->
+    <section class="admin-secao" data-secao="clientes" hidden>
+      <div class="kpis kpis--4" data-kpis-clientes></div>
+
+      <div class="admin-grade">
+        <div class="admin-cartao">
+          <div class="admin-cartao__topo"><h2>Novos clientes por dia</h2><span class="admin-dica">primeiro contato no período</span></div>
+          <div class="grafico grafico--baixo"><canvas data-grafico="novos" role="img" aria-label="Gráfico de novos clientes por dia"></canvas></div>
+        </div>
+        <div class="admin-cartao">
+          <div class="admin-cartao__topo"><h2>De onde são</h2><span class="admin-dica">clientes por cidade</span></div>
+          <ol class="barras" data-cidades></ol>
+        </div>
+      </div>
+
+      <div class="admin-ferramentas">
+        <label class="visually-hidden" for="busca-clientes">Buscar cliente</label>
+        <input id="busca-clientes" class="admin-busca" type="search" data-busca-clientes placeholder="Buscar por nome, WhatsApp ou cidade...">
+        <label class="visually-hidden" for="filtro-clientes">Mostrar</label>
+        <select id="filtro-clientes" class="admin-select" data-filtro-clientes>
+          <option value="todos">Todos os clientes</option>
+          <option value="quentes">Quentes (orçamento aberto)</option>
+          <option value="novos">Novos no período</option>
+          <option value="recorrentes">Recorrentes (2+ orçamentos)</option>
+          <option value="sem">Nunca pediram orçamento</option>
+        </select>
+        <label class="visually-hidden" for="ordem-clientes">Ordenar por</label>
+        <select id="ordem-clientes" class="admin-select" data-ordem-clientes>
+          <option value="recente">Mais recentes</option>
+          <option value="orcamentos">Mais orçamentos</option>
+          <option value="visitas">Mais visitas</option>
+          <option value="nome">Nome (A–Z)</option>
+        </select>
+        <button class="botao botao--outline botao--sm" type="button" data-exportar="clientes">Exportar CSV</button>
+      </div>
+      <p class="admin-dica" data-resumo-clientes></p>
+      <div class="clientes-grade" data-lista-clientes></div>
+      <div class="admin-mais"><button class="botao botao--outline" type="button" data-mais-clientes hidden>Mostrar mais clientes</button></div>
+    </section>
+
+    <!-- ========== ORÇAMENTOS ========== -->
+    <section class="admin-secao" data-secao="orcamentos" hidden>
+      <div class="kpis kpis--4" data-kpis-orcamentos></div>
+      <div class="admin-cartao admin-cartao--faixa">
+        <div class="admin-cartao__topo"><h2>Situação dos orçamentos</h2><span class="admin-dica">no período</span></div>
+        <div class="pilha" data-pilha-status></div>
+      </div>
+      <div class="admin-ferramentas">
+        <div class="admin-chips" role="group" aria-label="Filtrar por situação" data-filtro-status>
+          <button type="button" class="admin-chip" data-status="todos" aria-pressed="true">Todos</button>
+          <button type="button" class="admin-chip" data-status="novo" aria-pressed="false">Novos</button>
+          <button type="button" class="admin-chip" data-status="atendendo" aria-pressed="false">Atendendo</button>
+          <button type="button" class="admin-chip" data-status="fechado" aria-pressed="false">Fechados</button>
+          <button type="button" class="admin-chip" data-status="perdido" aria-pressed="false">Perdidos</button>
+        </div>
+        <button class="botao botao--outline botao--sm" type="button" data-exportar="orcamentos">Exportar CSV</button>
+      </div>
+      <div class="lista-orcamentos" data-lista-orcamentos></div>
+    </section>
+
+    <!-- ========== PESQUISAS ========== -->
+    <section class="admin-secao" data-secao="pesquisas" hidden>
+      <div class="admin-cartao admin-cartao--destaque" data-insight-pesquisa></div>
+      <div class="admin-ferramentas">
+        <label class="admin-check"><input type="checkbox" data-so-sem-resultado> Só o que não achou nada no site</label>
+      </div>
+      <div class="linhas" data-lista-pesquisas></div>
+    </section>
+
+    <!-- ========== TRÁFEGO ========== -->
+    <section class="admin-secao" data-secao="trafego" hidden>
+      <div class="admin-grade">
+        <div class="admin-cartao admin-cartao--largo">
+          <div class="admin-cartao__topo"><h2>Quando as pessoas visitam</h2><span class="admin-dica">dia da semana × hora. Quanto mais escuro, mais visitas.</span></div>
+          <div class="calor" data-calor></div>
+        </div>
+        <div class="admin-cartao"><div class="admin-cartao__topo"><h2>De onde vêm</h2><span class="admin-dica">origem da visita</span></div><ol class="barras" data-origens></ol></div>
+        <div class="admin-cartao"><div class="admin-cartao__topo"><h2>Páginas mais vistas</h2></div><ol class="barras" data-paginas></ol></div>
+        <div class="admin-cartao"><div class="admin-cartao__topo"><h2>Cliques nos botões</h2><span class="admin-dica">o que as pessoas tocam</span></div><ol class="barras" data-cliques></ol></div>
+        <div class="admin-cartao"><div class="admin-cartao__topo"><h2>Dias da semana</h2><span class="admin-dica">visitas somadas</span></div><div class="grafico grafico--baixo"><canvas data-grafico="semana" role="img" aria-label="Gráfico de visitas por dia da semana"></canvas></div></div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- Detalhe do cliente -->
+<div class="admin-detalhe-fundo" data-detalhe-fundo hidden></div>
+<aside class="admin-detalhe" data-detalhe-cliente aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="detalhe-nome" inert>
+  <button class="admin-detalhe__fechar" type="button" data-fechar-detalhe aria-label="Fechar">×</button>
+  <div data-detalhe-conteudo></div>
+</aside>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
+<script src="assets/js/config.js?v=20261014a"></script>
+<script src="assets/js/sem-zoom.js?v=20261014a"></script>
+<script src="assets/js/supabase-init.js?v=20261014a"></script>
+<script src="assets/js/admin-demo.js?v=20261014a"></script>
+<script src="assets/js/admin.js?v=20261014a"></script>
+</body>
+</html>

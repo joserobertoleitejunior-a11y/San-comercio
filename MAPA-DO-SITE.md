@@ -28,9 +28,20 @@
 | Galeria de fotos | `institucional.html` | bloco `===== GALERIA` (~linha 142) |
 | Perguntas frequentes | `institucional.html` | bloco `===== FAQ` (~linha 160) |
 | Endereço/contatos/mapa | `localizacao.html` | `.localizacao__grid` (~linha 107); textos vêm do `config.js` |
-| Cores, fontes, raios, sombras | `assets/css/style.css` | `:root` no topo (linhas 1–45) |
+| Cores, fontes, raios, sombras | `assets/css/style.css` | `:root` no topo. `--cor-marinho/primaria/loja` = azuis; `--cor-latao*` = ACENTO LARANJA (nome antigo, ver comentário). Cores dos gráficos do painel: `COR` em `admin.js` (validadas) |
+| Fundo do topo (hero) | `assets/css/style.css` | `.hero__foto` (gradientes) e `.hero__foto::after` (X gigante em SVG embutido). Sem foto de propósito |
 | Velocidade/efeitos das animações | `assets/js/animacoes.js` | ver seção 4 abaixo |
 | SEO (título, descrição, OG) | cada `.html` | `<head>` — `title`, `meta description`, `og:*`, JSON-LD (só na home+internas) |
+| Ícones flutuantes abaixo do header (igual Remop) | as 3 páginas | `.hero__faixa-contatos` logo no início de cada hero; links vêm do `config.js`  |
+| Link "Área administrativa" | as 3 páginas | último `<a class="nav-principal__admin">` do `<nav>` do header. Só aparece ao abrir o hambúrguer (que existe no celular e no desktop); no desktop vira um painel sob o botão. CSS: `.nav-principal__admin` |
+| Botão "Entrar com WhatsApp" / modal | as 3 páginas | `.cabecalho__entrar` no header + `===== MODAL: ENTRAR COM WHATSAPP`; lógica em `identificacao.js` |
+| Busca do catálogo | `index.html` | `.busca-produtos` + `.busca-vazia` dentro de `===== PRODUTOS`; lógica em `main.js → iniciarFiltroProdutos()` |
+| Painel admin: cores dos gráficos, tipos de gráfico | `assets/js/admin.js` | objeto `COR` e `STATUS_COR` no topo; cada gráfico em `renderGraficosVisao()`, `renderClientes()`, `renderTrafego()` |
+| Painel admin: tags dos clientes (Quente/Novo/Recorrente) | `assets/js/admin.js` | `montarClientes()` |
+| Painel admin (abas, textos) | `admin.html` | seções `data-secao="visao/clientes/orcamentos/pesquisas/trafego"` |
+| PIN do painel / e-mail interno | `assets/js/admin.js` | `PAINEL_EMAIL_FIXO` e `SUFIXO_SENHA_PIN` no topo + usuário no Supabase |
+| Dados de demonstração do painel | `assets/js/admin-demo.js` | listas de nomes/cidades/termos fictícios |
+| Tabelas e segurança do banco | `supabase/schema.sql` | rodar uma vez no SQL Editor do Supabase |
 
 ## 2. Blocos REPETIDOS nas 3 páginas (mudar em todas)
 
@@ -39,7 +50,8 @@ Site estático sem build: estes blocos são idênticos em `index.html`, `institu
 - `<svg ... latao-grad>` (gradientes do latão) — logo após o `<body>`
 - `===== HEADER` — logo SVG inline, menu, botão WhatsApp, botão da lista
 - `===== CTA FINAL` — "Mande a lista. A gente separa."
-- `===== GAVETA: LISTA DE ORÇAMENTO`, `.flutuantes`, `.toast`
+- `.hero__faixa-contatos` (ícones flutuantes)
+- `===== GAVETA: LISTA DE ORÇAMENTO`, `.flutuantes`, `===== MODAL: ENTRAR COM WHATSAPP`, `.toast`
 - `===== FOOTER` + lista de `<script>` no fim
 - Versão de cache `?v=AAAAMMDDx` nos links de CSS/JS — **trocar nas 3 páginas a cada deploy** (evita o cliente ver versão velha)
 
@@ -55,9 +67,18 @@ assets/js/config.js        ★ Único ponto de configuração (contatos, horári
 assets/js/main.js          Links WhatsApp/contatos, menu, header que some/volta, horário + "aberto agora",
                            faixa arrastável, filtro do catálogo, FAQ, toast
 assets/js/lista-orcamento.js  Lista de orçamento (carrinho sem preço) → WhatsApp; ficha de prensagem; item livre
-assets/js/animacoes.js     GSAP + ScrollTrigger: preloader, hero, barra-mangueira, títulos, contadores, tilt, etc.
+assets/js/identificacao.js Cliente se identifica com nome + WhatsApp (salva no navegador + tabela identificacoes)
+admin.html                 Painel: Visão geral, Clientes, Orçamentos, Pesquisas, Tráfego (login por PIN)
+assets/css/admin.css       Visual do painel
+assets/js/admin.js         Lógica do painel (Supabase real ou modo demonstração), gráficos Chart.js, CSV.
+                           Seções: Visão geral (KPIs com mini-gráfico, visitas com comparação, funil, orçamentos por situação,
+                           horário de pico, rankings), Clientes (cartões + filtros + detalhe), Orçamentos, Pesquisas, Tráfego (mapa de calor)
+assets/js/sem-zoom.js      Trava zoom por pinça, toque duplo, Ctrl+roda e Ctrl+/−/0 (junto com o <meta viewport> user-scalable=no)
+assets/js/admin-demo.js    Gerador de dados fictícios pra apresentar o painel antes de ligar o banco
+supabase/schema.sql        Tabelas + RLS (site só insere; painel logado lê)
+assets/js/animacoes.js     GSAP + ScrollTrigger: hero (o splash é CSS puro), barra-mangueira, títulos, contadores, tilt, etc.
 assets/js/supabase-init.js Inicializa Supabase se config preenchida (senão, só WhatsApp)
-assets/js/analytics.js     Páginas vistas + cliques (só grava com Supabase ativo)
+assets/js/analytics.js     Páginas vistas, cliques e pesquisas, ligados ao WhatsApp do cliente (só com Supabase ativo)
 
 assets/img/                Fotos reais recortadas dos materiais do cliente (ver seção 5)
 PADROES-AGENCIA.md         Regras fixas da agência (Vibe Coding Process)
@@ -71,7 +92,7 @@ netlify.toml               Pronto pra migração futura pro Netlify
 
 | Efeito | Função | Onde aparece |
 |---|---|---|
-| Preloader: X de mangueiras se desenha (1x por sessão) | `rodarPreloader()` | só `index.html` (`[data-preloader]`) |
+| Splash: X de mangueiras se desenha + cortina abre (1x por sessão) | CSS `.splash*` em `style.css` + script inline logo após o markup `[data-preloader]` (tempos `MIN`/`MAX` ali) | só `index.html` |
 | Entrada da hero, X gigante com fluido correndo, parallax | `animarHero()` | `.hero`, `.hero__x` |
 | Barra de progresso = mangueira com terminal de latão | `iniciarProgresso()` | topo de todas as páginas |
 | Títulos montando letra a letra | `montarTitulos("[data-montar]")` | todo `h2` com `data-montar` |
@@ -83,23 +104,46 @@ netlify.toml               Pronto pra migração futura pro Netlify
 | "+1" voando até a lista | `SanAnimacoes.voarParaLista()` | ao adicionar item |
 | Faixa dourada arrastável com inércia | `iniciarFaixaArrastavel()` | `main.js` (não depende do GSAP) |
 
-Tudo desliga com `prefers-reduced-motion`. Se o GSAP não carregar, o conteúdo aparece normal (sem animação) e o preloader some sozinho em ~3s (trava de segurança no CSS).
+Tudo desliga com `prefers-reduced-motion`. Se o GSAP não carregar, o conteúdo aparece normal (sem animação) e o splash some sozinho (trava no script inline em ~3,8s e, se até o JS morrer, trava de segurança no CSS em 5s).
 
-## 5. Imagens (assets/img)
+## 5. Imagens e ilustrações (assets/img)
 
 | Arquivo | Origem | Uso |
 |---|---|---|
-| `fachada-noite-san.jpg` | foto da fachada azul (fim de tarde) | hero home + internas, galeria, mosaico, OG |
-| `loja-lateral-san.jpg` | foto da lateral (Street View) | mosaico, história, galeria |
-| `loja-entrada-san.jpg` | recorte da capa do WhatsApp | mosaico, galeria |
-| `fachada-faixa-san.jpg` | recorte do letreiro (capa WhatsApp) | hero localização, galeria |
-| `flyer-9mil-san.jpg` | arte oficial "quase 9 mil itens" | galeria |
-| `cat-*.jpg` | recortes das artes de produtos do cliente | cards do catálogo |
-| `og-image-san.jpg` | 1200×630 a partir da fachada | compartilhamento (WhatsApp/Facebook) |
+| `fachada-noite-san.webp` | foto da fachada azul, tratada | hero home + internas, galeria, mosaico |
+| `loja-lateral-san.webp` | foto lateral (Street View), tratada | mosaico, história, galeria |
+| `loja-entrada-san.webp` | recorte da capa do WhatsApp, tratado | mosaico, galeria |
+| `fachada-faixa-san.webp` | letreiro da capa do WhatsApp, tratado | hero localização, galeria |
+| `og-image-san.jpg` | 1200×630 a partir da fachada | compartilhamento |
 | `favicon.svg` | desenhado (X de mangueiras) | aba do navegador |
 
-As fotos de categoria vieram de prints de baixa resolução — **trocar por fotos reais dos produtos** quando o cliente enviar (mesmo nome de arquivo = zero mudança no HTML). A loja amarela antiga **não** é usada no site.
+**Produtos do catálogo:** são ilustrações vetoriais (SVG) desenhadas no estilo da marca, embutidas em cada
+`<article class="card-produto">` do `index.html` (classe `.ilu`). Nítidas em qualquer tela, sem arquivo de imagem.
+As fotos recortadas dos prints foram descartadas (ficavam borradas ao ampliar). Quando o cliente mandar fotos reais
+em alta, trocar o `<svg class="ilu">` do card por `<img class="ilu" src="assets/img/NOME.webp" alt="...">`.
+Tamanho do card: classe `card-produto--g` = card largo de destaque (desktop); sem ela, card normal.
+Animações dos produtos (fluido correndo, polia girando) rodam só no hover — CSS `.ilu .fl` e `.ilu .gira`.
+
+**Serviços:** faixa `.servicos-linha` no topo de `===== PRODUTOS` (3 tiles: prensagem, orçamento por foto, ajuda pra achar a peça).
+
+A loja amarela antiga **não** é usada.
 
 ## 6. Logotipo
 
 O logo é um SVG inline (texto + X de mangueiras com terminais de latão), redesenhado a partir da marca. As cores mudam por CSS (`.logo-san__texto`, `.logo-san__mangueira`). Se o cliente enviar o logo vetorial oficial, substituir o `<svg class="logo-san">` nas 3 páginas (header, footer e preloader).
+
+## 7. Regras de layout (valem pro site e pro painel)
+
+- **Sem zoom:** `<meta viewport ... user-scalable=no>` + `sem-zoom.js`. Trade-off de acessibilidade aceito a pedido do cliente.
+- **Sem rolagem lateral em nenhuma largura** (testado de 280px a 1920px nas 4 páginas). Listas do painel são cartões em grade `auto-fill` (nada de tabela larga); filhos de grid têm `min-width: 0`; `html { overflow-x: clip }`.
+- Telas < 360px: cabeçalho e margens encolhem (bloco `max-width: 359px` no fim do `style.css`).
+
+- **`[hidden]` sempre esconde** (regra global no topo do `style.css`). Sem ela, o modal invisível "Entrar com WhatsApp" cobria a página e bloqueava toques.
+
+## 4.1 Desempenho (regras para não voltar a travar)
+- **Splash em CSS puro**: começa no 1º quadro, não depende de GSAP. Os scripts (GSAP, `main.js`…) são injetados por um mini-loader no fim do `<body>` **depois** da animação de entrada (≈1s na 1ª visita; imediato nas demais) e disparam um `DOMContentLoaded` sintético ao terminar. Scripts novos entram na lista `L` do loader (em `partes.py` do gerador), não como `<script src>`.
+- **Supabase SDK sob demanda**: `supabase-init.js` baixa o SDK só depois do `load` + ociosidade; `SanSupabase.client.from(t).insert(x)` espera sozinho. Só `insert` é suportado ali (o painel admin usa o SDK direto).
+- **Fontes não bloqueiam** (`preload` + `onload`), `font-display: swap`.
+- **Camadas**: `.hero__foto` tem `will-change: transform` (rasteriza 1x). Evitar animar `scale`/`filter` em camada sem promoção, evitar `will-change` em muitos elementos.
+- **Toque / <1024px** (`leve` em `animacoes.js` + bloco final de `style.css`): sem parallax, sem tilt, títulos animam por palavra (não por letra), sem `backdrop-filter` nem `drop-shadow` em SVG.
+- Títulos só são quebrados em letras quando chegam perto da tela; loops infinitos da hero pausam fora da tela.
